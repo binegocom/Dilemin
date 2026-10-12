@@ -63,6 +63,7 @@ final class AccountSuspensionTest extends TestCase
             ->getJson('/api/v1/conversations')->assertOk()->assertJsonCount(0, 'data');
         $this->getJson("/api/v1/conversations/$conversation/messages")->assertForbidden();
 
+        $target->refresh();
         $this->actingAs($target, 'sanctum')
             ->getJson('/api/v1/auth/me')->assertOk()->assertJsonPath('user.suspended', true);
         $this->getJson('/api/v1/discovery/online')->assertForbidden();

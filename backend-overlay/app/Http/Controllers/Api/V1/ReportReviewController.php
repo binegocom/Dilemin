@@ -38,7 +38,7 @@ class ReportReviewController extends Controller
         ])]);
     }
 
-    public function review(Request $request, PresenceStore $presence, int $report): JsonResponse
+    public function review(Request $request, int $report, PresenceStore $presence): JsonResponse
     {
         $this->authorizeModerator($request);
         $data = $request->validate([
