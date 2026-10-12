@@ -1,0 +1,24 @@
+name: Flutter CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Verify and install Rive animation asset
+        run: bash ../scripts/fetch_rive_assets.sh
+      - run: flutter pub get
+      - run: flutter gen-l10n
+      - run: flutter analyze
+      - run: flutter test

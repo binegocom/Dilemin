@@ -1,0 +1,33 @@
+name: dilemin
+description: Dılêmın — privacy-first live dating discovery
+publish_to: none
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.11.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  http: ^1.4.0
+  rive: ^0.14.11
+  lottie: ^3.6.1
+  flame: ^1.38.2
+  flutter_secure_storage: ^11.2.0
+  uuid: ^4.5.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/lottie/online_pulse.json
+    - assets/rive/web_icons_pack.riv
+  shaders:
+    - shaders/radar_glow.frag

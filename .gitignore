@@ -1,0 +1,25 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+**/.dart_tool/
+**/.flutter-plugins*
+**/.packages
+**/build/
+**/coverage/
+**/android/local.properties
+**/ios/Pods/
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/macos/Flutter/ephemeral/
+**/vendor/
+**/node_modules/
+**/storage/*.key
+**/storage/logs/*
+*.pem
+*.p12
+*.keystore
+*.jks
+
+# Local Laravel skeleton is generated from versioned backend-overlay source.
+/backend/

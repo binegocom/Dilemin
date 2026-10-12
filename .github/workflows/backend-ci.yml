@@ -1,0 +1,56 @@
+name: Backend CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: dilemin_test
+          POSTGRES_USER: dilemin
+          POSTGRES_PASSWORD: ci_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dilemin -d dilemin_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_pgsql
+          coverage: none
+      - name: Install clean Laravel skeleton
+        run: composer create-project laravel/laravel backend '^12.0' --no-interaction --no-progress
+      - name: Add Sanctum
+        working-directory: backend
+        run: composer require laravel/sanctum --no-interaction --no-progress
+      - name: Register API and overlay
+        run: |
+          python3 scripts/register_laravel_api.py backend/bootstrap/app.php
+          cp -R backend-overlay/. backend/
+      - name: Initialize test application key
+        working-directory: backend
+        run: php artisan key:generate
+      - name: Run tests
+        working-directory: backend
+        run: php artisan test
+        env:
+          APP_ENV: testing
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: '5432'
+          DB_DATABASE: dilemin_test
+          DB_USERNAME: dilemin
+          DB_PASSWORD: ci_password
+          CACHE_STORE: array
+          SESSION_DRIVER: array
+          QUEUE_CONNECTION: sync
