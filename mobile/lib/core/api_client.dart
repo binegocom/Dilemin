@@ -132,6 +132,13 @@ class ApiClient {
   Future<void> heartbeat() async { await _send('POST', '/api/v1/presence/heartbeat'); }
   Future<void> offline() async { await _send('POST', '/api/v1/presence/offline'); }
 
+  Future<SessionUser> setMessageNotifications(bool enabled) async {
+    final json = await _send('PATCH', '/api/v1/account/notifications', body: {
+      'push_messages_enabled': enabled,
+    });
+    return SessionUser.fromJson(json['user'] as Map<String, dynamic>);
+  }
+
   Future<SessionUser> visibility(bool visible) async {
     final json = await _send('PATCH', '/api/v1/account/visibility', body: {
       'online_visible': visible,

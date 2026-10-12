@@ -24,6 +24,7 @@ final class DataExportController extends Controller
             'date_of_birth' => $user->date_of_birth?->toDateString(),
             'bio' => $user->bio,
             'online_visible' => (bool) $user->online_visible,
+            'push_messages_enabled' => (bool) $user->push_messages_enabled,
             'email_verified_at' => $user->email_verified_at?->toIso8601String(),
             'created_at' => $user->created_at?->toIso8601String(),
         ];

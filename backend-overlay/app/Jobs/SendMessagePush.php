@@ -35,7 +35,8 @@ final class SendMessagePush implements ShouldQueue
         if (SocialAccess::blocked($low, $high)) return;
         $recipientId = $senderId === $low ? $high : $low;
         $recipient = DB::table('users')->where('id', $recipientId)->first();
-        if (! $recipient || $recipient->email_verified_at === null) return;
+        if (! $recipient || $recipient->email_verified_at === null
+            || ! (bool) $recipient->push_messages_enabled) return;
 
         // A delayed queue job must not notify about a message already read.
         $readCursor = $recipientId === $low

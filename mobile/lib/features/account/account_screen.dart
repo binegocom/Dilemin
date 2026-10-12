@@ -44,6 +44,18 @@ class _AccountScreenState extends State<AccountScreen> {
     finally { if (mounted) setState(() => _busy = false); }
   }
 
+  Future<void> _setMessageNotifications(bool enabled) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      widget.onUserChanged(await widget.api.setMessageNotifications(enabled));
+    } catch (_) {
+      _error();
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   void _error() {
     if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(AppLocalizations.of(context)!.connectionError),
@@ -171,6 +183,14 @@ class _AccountScreenState extends State<AccountScreen> {
                 builder: (_) => ReportReviewScreen(api: widget.api))),
             ),
           ],
+          const Divider(height: 1),
+          SwitchListTile.adaptive(
+            secondary: const Icon(Icons.notifications_active_outlined),
+            title: Text(l10n.messageNotifications),
+            subtitle: Text(l10n.messageNotificationsHint),
+            value: widget.user.pushMessagesEnabled,
+            onChanged: _busy ? null : _setMessageNotifications,
+          ),
           const Divider(height: 1),
           SwitchListTile.adaptive(
             secondary: const Icon(Icons.visibility_outlined),

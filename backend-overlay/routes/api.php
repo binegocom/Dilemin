@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\MessageController;
 use App\Http\Controllers\Api\V1\PresenceController;
 use App\Http\Controllers\Api\V1\PushDeviceController;
+use App\Http\Controllers\Api\V1\NotificationPreferenceController;
 use App\Http\Controllers\Api\V1\RealtimeAuthorizationController;
 use App\Http\Controllers\Api\V1\PasswordRecoveryController;
 use App\Http\Controllers\Api\V1\PhotoController;
@@ -44,6 +45,8 @@ Route::prefix('v1')->group(function (): void {
         Route::post('/presence/heartbeat', [PresenceController::class, 'heartbeat']);
         Route::post('/presence/offline', [PresenceController::class, 'offline']);
         Route::get('/discovery/online', [DiscoveryController::class, 'online']);
+        Route::patch('/account/notifications', [NotificationPreferenceController::class, 'update'])
+            ->middleware('throttle:dilemin-sensitive');
         Route::post('/realtime/authorize', RealtimeAuthorizationController::class)
             ->middleware('throttle:dilemin-sensitive');
         Route::put('/push/devices', [PushDeviceController::class, 'store'])->middleware('throttle:dilemin-sensitive');

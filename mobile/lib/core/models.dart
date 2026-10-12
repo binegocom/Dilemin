@@ -8,6 +8,7 @@ class SessionUser {
     this.photoStatus,
     this.isModerator = false,
     this.emailVerified = false,
+    this.pushMessagesEnabled = true,
   });
 
   final String id;
@@ -18,6 +19,7 @@ class SessionUser {
   final String? photoStatus;
   final bool isModerator;
   final bool emailVerified;
+  final bool pushMessagesEnabled;
 
   factory SessionUser.fromJson(Map<String, dynamic> json) => SessionUser(
         id: json['id'].toString(),
@@ -28,6 +30,7 @@ class SessionUser {
         photoStatus: json['photo_status'] as String?,
         isModerator: json['is_moderator'] == true,
         emailVerified: json['email_verified'] == true,
+        pushMessagesEnabled: json['push_messages_enabled'] != false,
       );
 }
 

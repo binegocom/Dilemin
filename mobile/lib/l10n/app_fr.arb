@@ -125,5 +125,7 @@
         "type": "int"
       }
     }
-  }
+  },
+  "messageNotifications": "Notifications des messages",
+  "messageNotificationsHint": "Recevez des alertes pour les nouveaux messages privés."
 }

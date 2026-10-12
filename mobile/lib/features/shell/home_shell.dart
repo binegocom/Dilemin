@@ -134,7 +134,7 @@ class _HomeShellState extends State<HomeShell> {
         AccountScreen(
           api: widget.api, user: widget.user,
           onUserChanged: widget.onUserChanged,
-          onSignOut: widget.onSignOut,
+          onSignOut: _signOut,
         ),
       ]),
       bottomNavigationBar: NavigationBar(
