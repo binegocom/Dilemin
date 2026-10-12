@@ -22,6 +22,9 @@ An adult-only dating application with a live, privacy-first radar, online direct
 14. Six-digit email verification before member discovery and messaging
 15. Blocked-person management and unblock
 16. Staff review queue for safety reports (review and dismiss actions)
+17. Active device sessions, individual revocation, password-confirmed sign out of other devices
+18. Password-confirmed user data export via native iOS / Android sharing
+19. Per-conversation unread counts and server-authorized read cursors
 
 Animation stack: Flutter, Rive, Lottie, GLSL shaders, and Flame. See [animation architecture](mobile/ANIMATIONS.md).
 
@@ -58,11 +61,11 @@ Generated `backend/` and platform folders can be tracked in Git after scaffoldin
 
 All routes under `/api/v1`:
 
-- `/auth/register`, `/auth/login`, `/auth/me`, `/auth/logout`, `/auth/email/request`, `/auth/email/confirm`, `/auth/password/request`, `/auth/password/confirm`
+- `/auth/register`, `/auth/login`, `/auth/me`, `/auth/logout`, `/auth/sessions`, `/auth/sessions/{id}`, `/auth/sessions/revoke-others`, `/auth/email/request`, `/auth/email/confirm`, `/auth/password/request`, `/auth/password/confirm`
 - `/presence/heartbeat`, `/presence/offline`, `/discovery/online`
-- `/account/profile`, `/account/visibility`, `/account` (delete)
+- `/account/profile`, `/account/visibility`, `/account` (delete), `/account/export` (password-confirmed JSON data export)
 - `/users/{id}`, `/users/{id}/block`, `/users/{id}/report`, `/account/blocked`
-- `/conversations`, `/conversations/{id}/messages`
+- `/conversations`, `/conversations/{id}/messages`, `/conversations/{id}/read`
 - `/account/photo` (POST/DELETE), `/users/{id}/photo` (authenticated, approved-only for other users)
 - `/moderation/photos`, `/moderation/photos/{id}`, `/moderation/photos/{id}/review` (moderators only)
 - `/moderation/reports`, `/moderation/reports/{id}/review` (moderators only; review state is not automatic user suspension)
@@ -80,8 +83,10 @@ Social endpoints enforce authenticated identity, blocked-user checks, conversati
 - Automated spam detection, moderator escalation and operational enforcement (report triage is now available), identity/age assurance where required
 - Deploy and operate human photo moderation with documented staff identity onboarding and an audit trail
 - Realtime push/WebSocket message and presence delivery (currently foreground polling: 5–25 seconds)
-- Push notifications, preferences, user-initiated downloads and data portability
+- Push notifications and configurable preferences; verify native export/share behavior on real devices
 - Deployment provisioning, backups, secrets management and incident response
-- Actual Flutter analyzer/tests/real-device Android/iOS build gates and store policy audit
+- Store policy audit, real-device Android/iOS build and performance gates (CI now includes native debug and simulator builds)
 
 Do not treat this milestone as a production release until these controls are implemented and verified.
+
+More details: [Account security, data export and presence](docs/ACCOUNT_SECURITY.md).
