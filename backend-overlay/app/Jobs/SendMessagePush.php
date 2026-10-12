@@ -37,7 +37,24 @@ final class SendMessagePush implements ShouldQueue
         $recipient = DB::table('users')->where('id', $recipientId)->first();
         if (! $recipient || $recipient->email_verified_at === null) return;
 
-        $devices = DB::table('push_devices')->where('user_id', $recipientId)->get();
+        // A delayed queue job must not notify about a message already read.
+        $readCursor = $recipientId === $low
+            ? $conversation->last_read_low_message_id
+            : $conversation->last_read_high_message_id;
+        if ((int) ($readCursor ?? 0) >= (int) $message->id) return;
+
+        // Token revocation is protected by a FK; expired sessions are filtered
+        // explicitly because Sanctum token expiry does not remove database rows.
+        $devices = DB::table('push_devices as device')
+            ->join('personal_access_tokens as session', 'session.id', '=', 'device.personal_access_token_id')
+            ->where('device.user_id', $recipientId)
+            ->where('session.tokenable_type', 'App\\Models\\User')
+            ->where('session.tokenable_id', $recipientId)
+            ->where(function ($query): void {
+                $query->whereNull('session.expires_at')
+                    ->orWhere('session.expires_at', '>', now());
+            })
+            ->get(['device.*']);
         if ($devices->isEmpty()) return;
 
         $credentialPath = config('dilemin.firebase_credentials');
@@ -52,8 +69,15 @@ final class SendMessagePush implements ShouldQueue
             'en' => ['New message', 'You received a new message.'],
         ];
         foreach ($devices as $device) {
-            // Re-check authorization immediately before the delivery attempt.
+            // Re-check state after slow provider calls and concurrent session revocation.
             if (SocialAccess::blocked($low, $high)) return;
+            if (! DB::table('push_devices')->where('id', $device->id)
+                ->where('user_id', $recipientId)
+                ->where('personal_access_token_id', $device->personal_access_token_id)
+                ->where('token_hash', $device->token_hash)->exists()) continue;
+            $latestRead = DB::table('conversations')->where('id', $conversation->id)
+                ->value($recipientId === $low ? 'last_read_low_message_id' : 'last_read_high_message_id');
+            if ((int) ($latestRead ?? 0) >= (int) $message->id) return;
             $copy = $texts[$device->locale] ?? $texts['en'];
             $cloud = CloudMessage::new()
                 ->withToken(Crypt::decryptString($device->token_ciphertext))
