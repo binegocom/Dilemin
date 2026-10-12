@@ -87,5 +87,16 @@
   "verificationCodeSent": "Un codice a sei cifre è stato inviato alla tua email. Scade tra 10 minuti.",
   "verificationCode": "Codice di verifica",
   "verifyEmail": "Verifica email",
-  "verificationFailed": "Verifica non riuscita. Controlla il codice, la ricezione e il limite di invio."
+  "verificationFailed": "Verifica non riuscita. Controlla il codice, la ricezione e il limite di invio.",
+  "blockedPeople": "Persone bloccate",
+  "noBlockedPeople": "Nessun profilo bloccato.",
+  "unblockPerson": "Sblocca",
+  "reportReview": "Esamina segnalazioni",
+  "noPendingReports": "Nessuna segnalazione in attesa.",
+  "reportReason": "Motivo",
+  "reportedPerson": "Persona segnalata",
+  "reportingPerson": "Segnalato da",
+  "dismissReport": "Ignora",
+  "markReviewed": "Segna come esaminato",
+  "deletedAccount": "Account eliminato"
 }

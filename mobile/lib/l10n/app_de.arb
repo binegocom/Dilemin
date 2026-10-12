@@ -87,5 +87,16 @@
   "verificationCodeSent": "Ein sechsstelliger Code wurde an deine E-Mail-Adresse gesendet. Er ist 10 Minuten gültig.",
   "verificationCode": "Bestätigungscode",
   "verifyEmail": "E-Mail bestätigen",
-  "verificationFailed": "Bestätigung fehlgeschlagen. Prüfe den Code, deine E-Mails und das Sendelimit."
+  "verificationFailed": "Bestätigung fehlgeschlagen. Prüfe den Code, deine E-Mails und das Sendelimit.",
+  "blockedPeople": "Blockierte Personen",
+  "noBlockedPeople": "Keine blockierten Profile.",
+  "unblockPerson": "Blockierung aufheben",
+  "reportReview": "Meldungen prüfen",
+  "noPendingReports": "Keine Meldungen zur Prüfung.",
+  "reportReason": "Grund",
+  "reportedPerson": "Gemeldete Person",
+  "reportingPerson": "Gemeldet von",
+  "dismissReport": "Verwerfen",
+  "markReviewed": "Als geprüft markieren",
+  "deletedAccount": "Gelöschtes Konto"
 }

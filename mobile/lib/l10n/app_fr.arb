@@ -87,5 +87,16 @@
   "verificationCodeSent": "Un code à six chiffres a été envoyé à votre adresse e-mail. Il expire dans 10 minutes.",
   "verificationCode": "Code de vérification",
   "verifyEmail": "Vérifier mon e-mail",
-  "verificationFailed": "Échec de la vérification. Vérifiez le code, la réception et la limite d’envoi."
+  "verificationFailed": "Échec de la vérification. Vérifiez le code, la réception et la limite d’envoi.",
+  "blockedPeople": "Personnes bloquées",
+  "noBlockedPeople": "Aucun profil bloqué.",
+  "unblockPerson": "Débloquer",
+  "reportReview": "Examiner les signalements",
+  "noPendingReports": "Aucun signalement en attente.",
+  "reportReason": "Motif",
+  "reportedPerson": "Personne signalée",
+  "reportingPerson": "Signalé par",
+  "dismissReport": "Rejeter",
+  "markReviewed": "Marquer comme examiné",
+  "deletedAccount": "Compte supprimé"
 }

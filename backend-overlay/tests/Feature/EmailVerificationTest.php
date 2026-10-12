@@ -45,6 +45,8 @@ class EmailVerificationTest extends TestCase
         $this->postJson('/api/v1/auth/email/confirm', ['code' => '123456'])
             ->assertOk()->assertJsonPath('user.email_verified', true);
         $this->mock(PresenceStore::class)->shouldReceive('onlineIds')->once()->andReturn([]);
+        // actingAs reuses the in-memory model; a real Sanctum request reloads it.
+        $this->actingAs($user->fresh(), 'sanctum');
         $this->getJson('/api/v1/discovery/online')->assertOk();
         $this->assertDatabaseCount('email_verification_codes', 0);
     }

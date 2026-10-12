@@ -131,6 +131,30 @@ class ApiClient {
     return json['id'].toString();
   }
 
+  Future<List<OnlinePerson>> blockedPeople() async {
+    final json = await _send('GET', '/api/v1/account/blocked');
+    return (json['data'] as List<dynamic>)
+        .map((value) => OnlinePerson.fromJson(value as Map<String, dynamic>))
+        .toList(growable: false);
+  }
+
+  Future<void> unblock(String personId) async {
+    await _send('DELETE', '/api/v1/users/${Uri.encodeComponent(personId)}/block');
+  }
+
+  Future<List<PendingReport>> pendingReports() async {
+    final json = await _send('GET', '/api/v1/moderation/reports');
+    return (json['data'] as List<dynamic>)
+        .map((value) => PendingReport.fromJson(value as Map<String, dynamic>))
+        .toList(growable: false);
+  }
+
+  Future<void> reviewReport(String id, bool dismissed) async {
+    await _send('POST', '/api/v1/moderation/reports/${Uri.encodeComponent(id)}/review', body: {
+      'decision': dismissed ? 'dismissed' : 'reviewed',
+    });
+  }
+
   Future<void> block(String personId) async {
     await _send('POST', '/api/v1/users/${Uri.encodeComponent(personId)}/block');
   }

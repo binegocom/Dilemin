@@ -94,3 +94,24 @@ class PendingPhoto {
     revision: json['revision'] as String,
   );
 }
+
+class PendingReport {
+  const PendingReport({
+    required this.id, required this.reporterName, required this.reason,
+    this.reportedName, this.details,
+  });
+
+  final String id;
+  final String reporterName;
+  final String? reportedName;
+  final String reason;
+  final String? details;
+
+  factory PendingReport.fromJson(Map<String, dynamic> json) => PendingReport(
+    id: json['id'].toString(),
+    reporterName: json['reporter_name'] as String,
+    reportedName: json['reported_name'] as String?,
+    reason: json['reason'] as String,
+    details: json['details'] as String?,
+  );
+}

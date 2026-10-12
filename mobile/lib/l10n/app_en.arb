@@ -87,5 +87,16 @@
   "verificationCodeSent": "A six-digit code was sent to your email address. It expires in 10 minutes.",
   "verificationCode": "Verification code",
   "verifyEmail": "Verify email",
-  "verificationFailed": "Verification failed. Check the code, email delivery and resend limit."
+  "verificationFailed": "Verification failed. Check the code, email delivery and resend limit.",
+  "blockedPeople": "Blocked people",
+  "noBlockedPeople": "No blocked profiles.",
+  "unblockPerson": "Unblock",
+  "reportReview": "Review reports",
+  "noPendingReports": "No reports waiting for review.",
+  "reportReason": "Reason",
+  "reportedPerson": "Reported person",
+  "reportingPerson": "Reported by",
+  "dismissReport": "Dismiss",
+  "markReviewed": "Mark reviewed",
+  "deletedAccount": "Deleted account"
 }

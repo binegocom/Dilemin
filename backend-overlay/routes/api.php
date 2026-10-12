@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\PresenceController;
 use App\Http\Controllers\Api\V1\PhotoController;
 use App\Http\Controllers\Api\V1\ModerationController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\ReportReviewController;
 use App\Http\Controllers\Api\V1\SafetyController;
 use App\Http\Controllers\Api\V1\VisibilityController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,10 @@ Route::prefix('v1')->group(function (): void {
         Route::patch('/account/profile', [ProfileController::class, 'update']);
         Route::patch('/account/visibility', [VisibilityController::class, 'update']);
         Route::delete('/account', [SafetyController::class, 'deleteAccount'])->middleware('throttle:dilemin-sensitive');
+        Route::get('/account/blocked', [BlockController::class, 'index']);
+        Route::get('/moderation/reports', [ReportReviewController::class, 'index']);
+        Route::post('/moderation/reports/{report}/review', [ReportReviewController::class, 'review'])
+            ->whereNumber('report')->middleware('throttle:dilemin-sensitive');
         Route::post('/users/{user}/block', [BlockController::class, 'store']);
         Route::delete('/users/{user}/block', [BlockController::class, 'destroy']);
         Route::post('/users/{user}/report', [SafetyController::class, 'report'])->middleware('throttle:dilemin-sensitive');

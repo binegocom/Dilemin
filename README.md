@@ -20,6 +20,8 @@ An adult-only dating application with a live, privacy-first radar, online direct
 12. Private profile photo upload, pending/rejected review states and deletion
 13. Moderator photo review queue (server-side moderator role only)
 14. Six-digit email verification before member discovery and messaging
+15. Blocked-person management and unblock
+16. Staff review queue for safety reports (review and dismiss actions)
 
 Animation stack: Flutter, Rive, Lottie, GLSL shaders, and Flame. See [animation architecture](mobile/ANIMATIONS.md).
 
@@ -59,10 +61,11 @@ All routes under `/api/v1`:
 - `/auth/register`, `/auth/login`, `/auth/me`, `/auth/logout`, `/auth/email/request`, `/auth/email/confirm`
 - `/presence/heartbeat`, `/presence/offline`, `/discovery/online`
 - `/account/profile`, `/account/visibility`, `/account` (delete)
-- `/users/{id}`, `/users/{id}/block`, `/users/{id}/report`
+- `/users/{id}`, `/users/{id}/block`, `/users/{id}/report`, `/account/blocked`
 - `/conversations`, `/conversations/{id}/messages`
 - `/account/photo` (POST/DELETE), `/users/{id}/photo` (authenticated, approved-only for other users)
 - `/moderation/photos`, `/moderation/photos/{id}`, `/moderation/photos/{id}/review` (moderators only)
+- `/moderation/reports`, `/moderation/reports/{id}/review` (moderators only; review state is not automatic user suspension)
 
 Photos are stored on Laravel private disk, re-encoded to JPEG without EXIF metadata, reviewed with revision-bound approval, and never publicly accessible by storage URL. Provision staff accounts only through a trusted backend administrator (never expose self-service moderator flags).
 
@@ -72,7 +75,7 @@ Social endpoints enforce authenticated identity, blocked-user checks, conversati
 
 ## Milestones still required
 
-- Spam moderation and abuse queue, identity/age assurance where required
+- Automated spam detection, moderator escalation and operational enforcement (report triage is now available), identity/age assurance where required
 - Deploy and operate human photo moderation with documented staff identity onboarding and an audit trail
 - Realtime push/WebSocket message and presence delivery (currently foreground polling: 5–25 seconds)
 - Push notifications, preferences, user-initiated downloads and data portability

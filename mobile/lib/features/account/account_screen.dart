@@ -8,6 +8,8 @@ import 'edit_profile_screen.dart';
 import '../photos/private_avatar.dart';
 import '../photos/profile_photo_screen.dart';
 import '../moderation/moderation_screen.dart';
+import '../moderation/report_review_screen.dart';
+import '../safety/blocked_people_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({
@@ -125,6 +127,14 @@ class _AccountScreenState extends State<AccountScreen> {
             trailing: const Icon(Icons.chevron_right),
             onTap: _busy ? null : _editPhoto,
           ),
+          const Divider(height: 1),
+          ListTile(
+            leading: const Icon(Icons.person_off_outlined),
+            title: Text(l10n.blockedPeople),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => BlockedPeopleScreen(api: widget.api))),
+          ),
           if (widget.user.isModerator) ...[
             const Divider(height: 1),
             ListTile(
@@ -133,6 +143,14 @@ class _AccountScreenState extends State<AccountScreen> {
               trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
                 builder: (_) => ModerationScreen(api: widget.api))),
+            ),
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.flag_outlined),
+              title: Text(l10n.reportReview),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => ReportReviewScreen(api: widget.api))),
             ),
           ],
           const Divider(height: 1),

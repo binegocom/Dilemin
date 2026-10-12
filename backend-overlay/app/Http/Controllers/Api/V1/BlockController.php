@@ -10,6 +10,18 @@ use Illuminate\Support\Facades\DB;
 
 class BlockController extends Controller
 {
+    public function index(Request $request): JsonResponse
+    {
+        $users = DB::table('blocks as b')->join('users as u', 'u.id', '=', 'b.blocked_id')
+            ->where('b.blocker_id', $request->user()->id)
+            ->orderByDesc('b.created_at')->limit(200)
+            ->get(['u.id', 'u.name']);
+        return response()->json(['data' => $users->map(fn ($row): array => [
+            'id' => (string) $row->id,
+            'display_name' => $row->name,
+        ])]);
+    }
+
     public function store(Request $request, User $user): JsonResponse
     {
         abort_if($request->user()->is($user), 422);
