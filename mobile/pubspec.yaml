@@ -17,6 +17,7 @@ dependencies:
   flame: ^1.38.2
   flutter_secure_storage: ^11.2.0
   uuid: ^4.5.2
+  image_picker: ^1.2.4
 
 dev_dependencies:
   flutter_test:

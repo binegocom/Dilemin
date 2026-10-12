@@ -24,17 +24,21 @@ class DiscoveryController extends Controller
             ->where('blocked_id', $request->user()->id);
 
         $people = User::query()
-            ->whereIn('id', $ids)
-            ->where('online_visible', true)
-            ->whereNotIn('id', $blocked)
-            ->whereNotIn('id', $blockedBy)
-            ->orderBy('id')
+            ->leftJoin('profile_photos as photo', function ($join): void {
+                $join->on('photo.user_id', '=', 'users.id')->where('photo.status', '=', 'approved');
+            })
+            ->whereIn('users.id', $ids)
+            ->where('users.online_visible', true)
+            ->whereNotIn('users.id', $blocked)
+            ->whereNotIn('users.id', $blockedBy)
+            ->orderBy('users.id')
             ->limit(200)
-            ->get(['id', 'name', 'bio'])
+            ->get(['users.id', 'users.name', 'users.bio', 'photo.id as photo_id'])
             ->map(fn (User $user): array => [
                 'id' => (string) $user->id,
                 'display_name' => $user->name,
                 'bio' => $user->bio,
+                'photo_id' => $user->photo_id === null ? null : (string) $user->photo_id,
             ]);
 
         return response()->json(['data' => $people]);

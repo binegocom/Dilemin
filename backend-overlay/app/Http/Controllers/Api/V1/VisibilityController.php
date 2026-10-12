@@ -20,6 +20,6 @@ class VisibilityController extends Controller
         } else {
             $presence->markOffline($user->id);
         }
-        return response()->json(['user' => PublicUser::serialize($user)]);
+        return response()->json(['user' => PublicUser::serialize($user, true)]);
     }
 }

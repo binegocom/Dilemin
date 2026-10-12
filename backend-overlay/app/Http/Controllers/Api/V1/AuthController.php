@@ -34,7 +34,7 @@ class AuthController extends Controller
         ]);
 
         return response()->json([
-            'user' => PublicUser::serialize($user),
+            'user' => PublicUser::serialize($user, true),
             'token' => $user->createToken('dilemin-mobile', ['*'], now()->addDays(30))->plainTextToken,
         ], 201);
     }
@@ -55,14 +55,14 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'user' => PublicUser::serialize($user),
+            'user' => PublicUser::serialize($user, true),
             'token' => $user->createToken('dilemin-mobile', ['*'], now()->addDays(30))->plainTextToken,
         ]);
     }
 
     public function me(Request $request): JsonResponse
     {
-        return response()->json(['user' => PublicUser::serialize($request->user())]);
+        return response()->json(['user' => PublicUser::serialize($request->user(), true)]);
     }
 
     public function logout(Request $request, PresenceStore $presence): JsonResponse

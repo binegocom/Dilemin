@@ -4,32 +4,43 @@ class SessionUser {
     required this.name,
     required this.onlineVisible,
     this.bio,
+    this.photoId,
+    this.photoStatus,
+    this.isModerator = false,
   });
 
   final String id;
   final String name;
   final bool onlineVisible;
   final String? bio;
+  final String? photoId;
+  final String? photoStatus;
+  final bool isModerator;
 
   factory SessionUser.fromJson(Map<String, dynamic> json) => SessionUser(
         id: json['id'].toString(),
         name: json['display_name'] as String,
         onlineVisible: json['online_visible'] as bool,
         bio: json['bio'] as String?,
+        photoId: json['photo_id']?.toString(),
+        photoStatus: json['photo_status'] as String?,
+        isModerator: json['is_moderator'] == true,
       );
 }
 
 class OnlinePerson {
-  const OnlinePerson({required this.id, required this.name, this.bio});
+  const OnlinePerson({required this.id, required this.name, this.bio, this.photoId});
 
   final String id;
   final String name;
   final String? bio;
+  final String? photoId;
 
   factory OnlinePerson.fromJson(Map<String, dynamic> json) => OnlinePerson(
         id: json['id'].toString(),
         name: json['display_name'] as String,
         bio: json['bio'] as String?,
+        photoId: json['photo_id']?.toString(),
       );
 }
 
@@ -64,4 +75,19 @@ class ChatMessage {
         body: json['body'] as String,
         createdAt: DateTime.parse(json['created_at'] as String),
       );
+}
+
+class PendingPhoto {
+  const PendingPhoto({required this.id, required this.userId, required this.name, required this.revision});
+  final String id;
+  final String userId;
+  final String name;
+  final String revision;
+
+  factory PendingPhoto.fromJson(Map<String, dynamic> json) => PendingPhoto(
+    id: json['id'].toString(),
+    userId: json['user_id'].toString(),
+    name: json['display_name'] as String,
+    revision: json['revision'] as String,
+  );
 }

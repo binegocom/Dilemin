@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 import 'app_config.dart';
@@ -142,6 +144,54 @@ class ApiClient {
 
   Future<void> deleteAccount(String password) async {
     await _send('DELETE', '/api/v1/account', body: {'password': password});
+  }
+
+
+  Future<SessionUser> uploadPhoto(XFile file) async {
+    final request = http.MultipartRequest('POST', AppConfig.baseUri.resolve('/api/v1/account/photo'));
+    request.headers['Accept'] = 'application/json';
+    if (token != null) request.headers['Authorization'] = 'Bearer $token';
+    request.files.add(await http.MultipartFile.fromPath('photo', file.path, filename: file.name));
+    final streamed = await _client.send(request).timeout(const Duration(seconds: 35));
+    final response = await http.Response.fromStream(streamed);
+    if (response.statusCode != 201) throw ApiException(response.statusCode);
+    return SessionUser.fromJson((jsonDecode(response.body) as Map<String, dynamic>)['user'] as Map<String, dynamic>);
+  }
+
+  Future<SessionUser> deletePhoto() async {
+    final response = await _send('DELETE', '/api/v1/account/photo');
+    return SessionUser.fromJson(response['user'] as Map<String, dynamic>);
+  }
+
+  Future<Uint8List> photoBytes(String userId) => _readImage(
+    '/api/v1/users/${Uri.encodeComponent(userId)}/photo',
+  );
+
+  Future<Uint8List> moderationPhotoBytes(String photoId) => _readImage(
+    '/api/v1/moderation/photos/${Uri.encodeComponent(photoId)}',
+  );
+
+  Future<Uint8List> _readImage(String path) async {
+    final response = await _client.get(AppConfig.baseUri.resolve(path),
+      headers: {'Accept': 'image/jpeg', if (token != null) 'Authorization': 'Bearer $token'},
+    ).timeout(const Duration(seconds: 15));
+    if (response.statusCode != 200) throw ApiException(response.statusCode);
+    if (response.bodyBytes.length > 8 * 1024 * 1024) throw const FormatException('Image too large.');
+    return response.bodyBytes;
+  }
+
+  Future<List<PendingPhoto>> pendingPhotos() async {
+    final result = await _send('GET', '/api/v1/moderation/photos');
+    return (result['data'] as List<dynamic>)
+        .map((item) => PendingPhoto.fromJson(item as Map<String, dynamic>))
+        .toList(growable: false);
+  }
+
+  Future<void> reviewPhoto(PendingPhoto photo, bool approved) async {
+    await _send('POST', '/api/v1/moderation/photos/${Uri.encodeComponent(photo.id)}/review', body: {
+      'revision': photo.revision,
+      'decision': approved ? 'approved' : 'rejected',
+    });
   }
 
   Future<void> logout() async { await _send('POST', '/api/v1/auth/logout'); }

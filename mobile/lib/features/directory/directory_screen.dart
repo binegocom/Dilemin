@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
 import '../../core/models.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui/palette.dart';
+import '../photos/private_avatar.dart';
 
 class DirectoryScreen extends StatefulWidget {
   const DirectoryScreen({
@@ -21,7 +24,9 @@ class DirectoryScreen extends StatefulWidget {
   State<DirectoryScreen> createState() => _DirectoryScreenState();
 }
 
-class _DirectoryScreenState extends State<DirectoryScreen> {
+class _DirectoryScreenState extends State<DirectoryScreen> with WidgetsBindingObserver {
+  Timer? _timer;
+  bool _active = true;
   final _search = TextEditingController();
   List<OnlinePerson> _people = const [];
   bool _busy = true;
@@ -31,7 +36,17 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _refresh();
+    _timer = Timer.periodic(const Duration(seconds: 20), (_) {
+      if (_active) _refresh();
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _active = state == AppLifecycleState.resumed;
+    if (_active) _refresh();
   }
 
   @override
@@ -56,6 +71,8 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
 
   @override
   void dispose() {
+    _timer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     _requestSerial++;
     _search.dispose();
     super.dispose();
@@ -112,7 +129,8 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                     child: Padding(padding: const EdgeInsets.all(14), child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ProfileAvatar(name: person.name, size: 65, isOnline: true),
+                        PrivateAvatar(api: widget.api, userId: person.id,
+                          name: person.name, photoId: person.photoId, size: 65, isOnline: true),
                         const SizedBox(height: 13),
                         Text(person.name, maxLines: 1, overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontWeight: FontWeight.w700)),

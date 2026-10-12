@@ -68,5 +68,17 @@
   "editProfile": "Edit profile",
   "saveChanges": "Save changes",
   "deleteAccount": "Delete account",
-  "deleteAccountWarning": "Your account and messages will be deleted permanently. Confirm with your password."
+  "deleteAccountWarning": "Your account and messages will be deleted permanently. Confirm with your password.",
+  "profilePhoto": "Profile photo",
+  "choosePhoto": "Choose a photo",
+  "removePhoto": "Remove photo",
+  "photoPending": "Waiting for review. Only you can see this photo.",
+  "photoRejected": "This photo was rejected. You can upload another.",
+  "photoPrivacyNote": "Photos are stored privately. Other members can only see an approved photo while your profile is online and visible.",
+  "photoUploadFailed": "Unable to upload this photo. Choose a JPEG, PNG or WebP image up to 5 MB.",
+  "photoModeration": "Photo moderation",
+  "noPendingPhotos": "No photos waiting for review.",
+  "reviewFailed": "Photo changed or review failed. Refresh and try again.",
+  "approvePhoto": "Approve",
+  "rejectPhoto": "Reject"
 }

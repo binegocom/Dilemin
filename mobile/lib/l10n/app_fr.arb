@@ -68,5 +68,17 @@
   "editProfile": "Modifier le profil",
   "saveChanges": "Enregistrer",
   "deleteAccount": "Supprimer le compte",
-  "deleteAccountWarning": "Votre compte et vos messages seront définitivement supprimés. Confirmez avec votre mot de passe."
+  "deleteAccountWarning": "Votre compte et vos messages seront définitivement supprimés. Confirmez avec votre mot de passe.",
+  "profilePhoto": "Photo de profil",
+  "choosePhoto": "Choisir une photo",
+  "removePhoto": "Supprimer la photo",
+  "photoPending": "En attente de vérification. Vous seul pouvez voir cette photo.",
+  "photoRejected": "Cette photo a été refusée. Vous pouvez en envoyer une autre.",
+  "photoPrivacyNote": "Les photos sont stockées de manière privée. Les membres ne voient une photo approuvée que si votre profil est visible et en ligne.",
+  "photoUploadFailed": "Envoi impossible. Choisissez une image JPEG, PNG ou WebP de 5 Mo maximum.",
+  "photoModeration": "Modération des photos",
+  "noPendingPhotos": "Aucune photo en attente.",
+  "reviewFailed": "La photo a changé ou la vérification a échoué. Actualisez et réessayez.",
+  "approvePhoto": "Approuver",
+  "rejectPhoto": "Refuser"
 }

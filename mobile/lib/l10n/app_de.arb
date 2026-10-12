@@ -68,5 +68,17 @@
   "editProfile": "Profil bearbeiten",
   "saveChanges": "Änderungen speichern",
   "deleteAccount": "Konto löschen",
-  "deleteAccountWarning": "Dein Konto und deine Nachrichten werden endgültig gelöscht. Bestätige mit deinem Passwort."
+  "deleteAccountWarning": "Dein Konto und deine Nachrichten werden endgültig gelöscht. Bestätige mit deinem Passwort.",
+  "profilePhoto": "Profilfoto",
+  "choosePhoto": "Foto auswählen",
+  "removePhoto": "Foto entfernen",
+  "photoPending": "Wird geprüft. Nur du kannst dieses Foto sehen.",
+  "photoRejected": "Dieses Foto wurde abgelehnt. Du kannst ein neues hochladen.",
+  "photoPrivacyNote": "Fotos werden privat gespeichert. Andere Mitglieder sehen ein freigegebenes Foto nur, wenn dein Profil online und sichtbar ist.",
+  "photoUploadFailed": "Foto konnte nicht hochgeladen werden. Wähle JPEG, PNG oder WebP bis 5 MB.",
+  "photoModeration": "Fotoprüfung",
+  "noPendingPhotos": "Keine Fotos zur Prüfung vorhanden.",
+  "reviewFailed": "Das Foto wurde geändert oder die Prüfung ist fehlgeschlagen. Bitte aktualisieren.",
+  "approvePhoto": "Freigeben",
+  "rejectPhoto": "Ablehnen"
 }

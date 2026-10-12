@@ -2,7 +2,7 @@
 
 An adult-only dating application with a live, privacy-first radar, online directory, private one-to-one conversations, and account safety tools. **No swipe or match system.**
 
-> Development milestone: foundation + core screens. Not yet App Store or production launch ready.
+> Development milestone: foundation + core screens + private moderated photos. Not yet App Store or production launch ready.
 
 ## Screens implemented (Flutter)
 
@@ -17,6 +17,8 @@ An adult-only dating application with a live, privacy-first radar, online direct
 9. Account and privacy visibility
 10. Edit profile
 11. Account deletion confirmation
+12. Private profile photo upload, pending/rejected review states and deletion
+13. Moderator photo review queue (server-side moderator role only)
 
 Animation stack: Flutter, Rive, Lottie, GLSL shaders, and Flame. See [animation architecture](mobile/ANIMATIONS.md).
 
@@ -58,14 +60,18 @@ All routes under `/api/v1`:
 - `/account/profile`, `/account/visibility`, `/account` (delete)
 - `/users/{id}`, `/users/{id}/block`, `/users/{id}/report`
 - `/conversations`, `/conversations/{id}/messages`
+- `/account/photo` (POST/DELETE), `/users/{id}/photo` (authenticated, approved-only for other users)
+- `/moderation/photos`, `/moderation/photos/{id}`, `/moderation/photos/{id}/review` (moderators only)
+
+Photos are stored on Laravel private disk, re-encoded to JPEG without EXIF metadata, reviewed with revision-bound approval, and never publicly accessible by storage URL. Provision staff accounts only through a trusted backend administrator (never expose self-service moderator flags).
 
 Social endpoints enforce authenticated identity, blocked-user checks, conversation membership, and server-side rate limits. Message client UUIDs provide retry deduplication. Public profile payloads never contain email, date of birth, or exact location.
 
 ## Milestones still required
 
 - Email verification, spam moderation and abuse queue, identity/age assurance where required
-- Secure private photo uploads + moderation and presentation
-- Realtime message and presence delivery (current refresh/poll model is not WebSocket)
+- Deploy and operate human photo moderation with documented staff identity onboarding and an audit trail
+- Realtime push/WebSocket message and presence delivery (currently foreground polling: 5–25 seconds)
 - Push notifications, preferences, user-initiated downloads and data portability
 - Deployment provisioning, backups, secrets management and incident response
 - Actual Flutter analyzer/tests/real-device Android/iOS build gates and store policy audit

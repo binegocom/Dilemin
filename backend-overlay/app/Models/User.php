@@ -22,6 +22,7 @@ class User extends Authenticatable
         return [
             'date_of_birth' => 'date',
             'online_visible' => 'boolean',
+            'is_moderator' => 'boolean',
             'password' => 'hashed',
             'email_verified_at' => 'datetime',
         ];

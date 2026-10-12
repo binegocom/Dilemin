@@ -4,6 +4,7 @@ import '../../core/api_client.dart';
 import '../../core/models.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui/palette.dart';
+import '../photos/private_avatar.dart';
 
 class PersonScreen extends StatefulWidget {
   const PersonScreen({
@@ -137,7 +138,8 @@ class _PersonScreenState extends State<PersonScreen> {
                   constraints: const BoxConstraints(maxWidth: 520),
                   child: ListView(padding: const EdgeInsets.all(24), children: [
                     const SizedBox(height: 30),
-                    Center(child: ProfileAvatar(name: person.name, size: 132, isOnline: true)),
+                    Center(child: PrivateAvatar(api: widget.api, userId: person.id,
+                      name: person.name, photoId: person.photoId, size: 132, isOnline: true)),
                     const SizedBox(height: 20),
                     Text(person.name, textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),

@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class SafetyController extends Controller
 {
@@ -35,10 +36,12 @@ class SafetyController extends Controller
         $user = $request->user();
         abort_unless(Hash::check($data['password'], $user->password), 422);
         $presence->markOffline($user->id);
+        $photo = DB::table('profile_photos')->where('user_id', $user->id)->value('private_path');
         DB::transaction(function () use ($user): void {
             $user->tokens()->delete();
             $user->delete();
         });
+        if ($photo) Storage::disk('local')->delete($photo);
         return response()->json(['status' => 'deleted']);
     }
 }

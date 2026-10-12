@@ -35,6 +35,7 @@ plist = root / 'ios/Runner/Info.plist'
 if plist.exists():
     with plist.open('rb') as f: data = plistlib.load(f)
     data['CFBundleDisplayName'] = 'Dılêmın'
+    data['NSPhotoLibraryUsageDescription'] = 'Choose a profile photo to share after moderation.'
     with plist.open('wb') as f: plistlib.dump(data, f)
 PYLOCAL
 fi

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -24,7 +26,10 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
+  Timer? _poll;
+  bool _active = true;
+  bool _refreshing = false;
   final _compose = TextEditingController();
   List<ChatMessage> _messages = const [];
   bool _loading = true;
@@ -34,15 +39,30 @@ class _ChatScreenState extends State<ChatScreen> {
   String? _pendingBody;
 
   @override
-  void initState() { super.initState(); _refresh(); }
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _refresh();
+    _poll = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (_active && !_refreshing && !_sending) _refresh();
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _active = state == AppLifecycleState.resumed;
+    if (_active) _refresh();
+  }
 
   Future<void> _refresh() async {
+    if (_refreshing) return;
+    _refreshing = true;
     try {
       final data = await widget.api.messages(widget.conversationId);
       if (mounted) setState(() { _messages = data; _loading = false; _failed = false; });
     } catch (_) {
       if (mounted) setState(() { _loading = false; _failed = true; });
-    }
+    } finally { _refreshing = false; }
   }
 
   Future<void> _send() async {
@@ -69,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   @override
-  void dispose() { _compose.dispose(); super.dispose(); }
+  void dispose() { _poll?.cancel(); WidgetsBinding.instance.removeObserver(this); _compose.dispose(); super.dispose(); }
 
   @override
   Widget build(BuildContext context) {

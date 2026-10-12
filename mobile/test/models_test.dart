@@ -13,6 +13,18 @@ void main() {
     expect(person.name, 'Alex');
   });
 
+  test('photo moderation fields parse without exposing sensitive user data', () {
+    final owner = SessionUser.fromJson(const {
+      'id': 1, 'display_name': 'A', 'online_visible': false,
+      'photo_id': '10', 'photo_status': 'pending', 'is_moderator': true,
+    });
+    expect(owner.photoId, '10');
+    expect(owner.photoStatus, 'pending');
+    expect(owner.isModerator, isTrue);
+    final public = OnlinePerson.fromJson(const {'id': 2, 'display_name': 'B', 'photo_id': null});
+    expect(public.photoId, isNull);
+  });
+
   test('schematic radar position is stable per user', () {
     final a = markerPosition('user-123', const Size(320, 320));
     final b = markerPosition('user-123', const Size(320, 320));

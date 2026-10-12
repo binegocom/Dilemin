@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
@@ -21,14 +23,29 @@ class ConversationsScreen extends StatefulWidget {
   State<ConversationsScreen> createState() => _ConversationsScreenState();
 }
 
-class _ConversationsScreenState extends State<ConversationsScreen> {
+class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsBindingObserver {
+  Timer? _timer;
+  bool _active = true;
   List<ConversationPreview> _conversations = const [];
   bool _loading = true;
   bool _failed = false;
   int _serial = 0;
 
   @override
-  void initState() { super.initState(); _refresh(); }
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _refresh();
+    _timer = Timer.periodic(const Duration(seconds: 12), (_) {
+      if (_active) _refresh();
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _active = state == AppLifecycleState.resumed;
+    if (_active) _refresh();
+  }
 
   @override
   void didUpdateWidget(covariant ConversationsScreen oldWidget) {
@@ -49,7 +66,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   }
 
   @override
-  void dispose() { _serial++; super.dispose(); }
+  void dispose() { _timer?.cancel(); WidgetsBinding.instance.removeObserver(this); _serial++; super.dispose(); }
 
   @override
   Widget build(BuildContext context) {

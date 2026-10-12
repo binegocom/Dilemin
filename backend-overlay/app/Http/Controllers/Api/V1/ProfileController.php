@@ -22,7 +22,7 @@ class ProfileController extends Controller
         if (array_key_exists('display_name', $data)) $user->name = $data['display_name'];
         if (array_key_exists('bio', $data)) $user->bio = $data['bio'];
         $user->save();
-        return response()->json(['user' => PublicUser::serialize($user)]);
+        return response()->json(['user' => PublicUser::serialize($user, true)]);
     }
 
     public function show(Request $request, User $user, PresenceStore $presence): JsonResponse

@@ -5,6 +5,9 @@ import '../../core/models.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui/palette.dart';
 import 'edit_profile_screen.dart';
+import '../photos/private_avatar.dart';
+import '../photos/profile_photo_screen.dart';
+import '../moderation/moderation_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({
@@ -83,6 +86,14 @@ class _AccountScreenState extends State<AccountScreen> {
     if (updated != null) widget.onUserChanged(updated);
   }
 
+  Future<void> _editPhoto() async {
+    await Navigator.of(context).push<void>(MaterialPageRoute(
+      builder: (_) => ProfilePhotoScreen(api: widget.api, user: widget.user),
+    ));
+    if (!mounted) return;
+    try { widget.onUserChanged(await widget.api.me()); } catch (_) { _error(); }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -91,7 +102,8 @@ class _AccountScreenState extends State<AccountScreen> {
       child: ListView(padding: const EdgeInsets.all(22), children: [
         Text(l10n.navAccount, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
         const SizedBox(height: 28),
-        Center(child: ProfileAvatar(name: widget.user.name, size: 96)),
+        Center(child: PrivateAvatar(api: widget.api, userId: widget.user.id,
+          name: widget.user.name, photoId: widget.user.photoId, size: 96)),
         const SizedBox(height: 14),
         Text(widget.user.name, textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
@@ -106,6 +118,23 @@ class _AccountScreenState extends State<AccountScreen> {
             trailing: const Icon(Icons.chevron_right),
             onTap: _busy ? null : _edit,
           ),
+          const Divider(height: 1),
+          ListTile(
+            leading: const Icon(Icons.photo_camera_back_outlined),
+            title: Text(l10n.profilePhoto),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: _busy ? null : _editPhoto,
+          ),
+          if (widget.user.isModerator) ...[
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.verified_user_outlined),
+              title: Text(l10n.photoModeration),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => ModerationScreen(api: widget.api))),
+            ),
+          ],
           const Divider(height: 1),
           SwitchListTile.adaptive(
             secondary: const Icon(Icons.visibility_outlined),

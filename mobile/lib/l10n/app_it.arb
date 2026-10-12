@@ -68,5 +68,17 @@
   "editProfile": "Modifica profilo",
   "saveChanges": "Salva modifiche",
   "deleteAccount": "Elimina account",
-  "deleteAccountWarning": "Account e messaggi verranno eliminati definitivamente. Conferma con la password."
+  "deleteAccountWarning": "Account e messaggi verranno eliminati definitivamente. Conferma con la password.",
+  "profilePhoto": "Foto profilo",
+  "choosePhoto": "Scegli una foto",
+  "removePhoto": "Rimuovi foto",
+  "photoPending": "In attesa di revisione. Solo tu puoi vedere questa foto.",
+  "photoRejected": "Questa foto è stata rifiutata. Puoi caricarne un’altra.",
+  "photoPrivacyNote": "Le foto sono archiviate privatamente. Gli altri membri vedono una foto approvata solo quando il tuo profilo è online e visibile.",
+  "photoUploadFailed": "Caricamento non riuscito. Scegli un’immagine JPEG, PNG o WebP fino a 5 MB.",
+  "photoModeration": "Moderazione foto",
+  "noPendingPhotos": "Nessuna foto in attesa di revisione.",
+  "reviewFailed": "La foto è cambiata o la revisione non è riuscita. Aggiorna e riprova.",
+  "approvePhoto": "Approva",
+  "rejectPhoto": "Rifiuta"
 }
