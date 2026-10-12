@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/api_client.dart';
 import '../../core/models.dart';
 import '../../l10n/app_localizations.dart';
+import 'password_recovery_screen.dart';
 
 typedef Authenticated = Future<void> Function(String token, SessionUser user);
 
@@ -152,6 +153,12 @@ class _AuthScreenState extends State<AuthScreen> {
                         child: _busy ? const SizedBox(width: 22, height: 22,
                           child: CircularProgressIndicator(strokeWidth: 2))
                           : Text(_register ? l10n.register : l10n.logIn),
+                      ),
+                      if (!_register) TextButton(
+                        onPressed: _busy ? null : () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(builder: (_) => PasswordRecoveryScreen(
+                            api: widget.api, initialEmail: _email.text.trim()))),
+                        child: Text(l10n.forgotPassword),
                       ),
                       TextButton(
                         onPressed: _busy ? null : () => setState(() {

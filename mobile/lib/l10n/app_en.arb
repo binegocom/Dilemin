@@ -98,5 +98,13 @@
   "reportingPerson": "Reported by",
   "dismissReport": "Dismiss",
   "markReviewed": "Mark reviewed",
-  "deletedAccount": "Deleted account"
+  "deletedAccount": "Deleted account",
+  "forgotPassword": "Forgot password?",
+  "passwordRecoveryHint": "Enter your account email to request a six-digit password reset code.",
+  "sendRecoveryCode": "Send reset code",
+  "recoveryCodeSent": "If this account exists, a recovery code was sent. Check your inbox.",
+  "newPassword": "New password",
+  "resetPassword": "Reset password",
+  "passwordResetSuccess": "Password changed. Sign in with the new password.",
+  "passwordResetFailed": "Reset failed. Check the code or request another one."
 }

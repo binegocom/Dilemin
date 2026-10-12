@@ -98,5 +98,13 @@
   "reportingPerson": "Signalé par",
   "dismissReport": "Rejeter",
   "markReviewed": "Marquer comme examiné",
-  "deletedAccount": "Compte supprimé"
+  "deletedAccount": "Compte supprimé",
+  "forgotPassword": "Mot de passe oublié ?",
+  "passwordRecoveryHint": "Saisissez votre adresse e-mail pour demander un code de réinitialisation à six chiffres.",
+  "sendRecoveryCode": "Envoyer un code",
+  "recoveryCodeSent": "Si ce compte existe, un code a été envoyé. Vérifiez votre boîte mail.",
+  "newPassword": "Nouveau mot de passe",
+  "resetPassword": "Réinitialiser le mot de passe",
+  "passwordResetSuccess": "Mot de passe modifié. Connectez-vous avec le nouveau mot de passe.",
+  "passwordResetFailed": "Échec de la réinitialisation. Vérifiez le code ou demandez-en un autre."
 }

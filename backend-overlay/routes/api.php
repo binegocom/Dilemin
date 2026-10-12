@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\DiscoveryController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\MessageController;
 use App\Http\Controllers\Api\V1\PresenceController;
+use App\Http\Controllers\Api\V1\PasswordRecoveryController;
 use App\Http\Controllers\Api\V1\PhotoController;
 use App\Http\Controllers\Api\V1\ModerationController;
 use App\Http\Controllers\Api\V1\ProfileController;
@@ -18,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function (): void {
     Route::post('/auth/register', [AuthController::class, 'register'])->middleware('throttle:dilemin-register');
     Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:dilemin-login');
+    Route::post('/auth/password/request', [PasswordRecoveryController::class, 'requestCode'])
+        ->middleware('throttle:dilemin-password-request');
+    Route::post('/auth/password/confirm', [PasswordRecoveryController::class, 'confirm'])
+        ->middleware('throttle:dilemin-password-confirm');
 
     Route::middleware(['auth:sanctum', 'throttle:dilemin-api'])->group(function (): void {
         Route::get('/auth/me', [AuthController::class, 'me']);

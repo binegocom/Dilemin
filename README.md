@@ -58,7 +58,7 @@ Generated `backend/` and platform folders can be tracked in Git after scaffoldin
 
 All routes under `/api/v1`:
 
-- `/auth/register`, `/auth/login`, `/auth/me`, `/auth/logout`, `/auth/email/request`, `/auth/email/confirm`
+- `/auth/register`, `/auth/login`, `/auth/me`, `/auth/logout`, `/auth/email/request`, `/auth/email/confirm`, `/auth/password/request`, `/auth/password/confirm`
 - `/presence/heartbeat`, `/presence/offline`, `/discovery/online`
 - `/account/profile`, `/account/visibility`, `/account` (delete)
 - `/users/{id}`, `/users/{id}/block`, `/users/{id}/report`, `/account/blocked`
@@ -70,6 +70,8 @@ All routes under `/api/v1`:
 Photos are stored on Laravel private disk, re-encoded to JPEG without EXIF metadata, reviewed with revision-bound approval, and never publicly accessible by storage URL. Provision staff accounts only through a trusted backend administrator (never expose self-service moderator flags).
 
 Email verification is mandatory before discovery, visibility, photo management, or chat. The email confirmation code is hash-stored and expires after ten minutes; sending has a one-minute cooldown and hourly API limit, and five wrong attempts lock the challenge. Delivery requires configured SMTP in production; a local log-mailer is not a production delivery solution.
+
+Password recovery uses six-digit, hash-stored, ten-minute codes, a ninety-second resend cooldown, five-attempt lockout, per-IP throttling, and invalidates all existing Sanctum access tokens on success. It requires working SMTP delivery.
 
 Social endpoints enforce authenticated identity, blocked-user checks, conversation membership, and server-side rate limits. Message client UUIDs provide retry deduplication. Public profile payloads never contain email, date of birth, or exact location.
 

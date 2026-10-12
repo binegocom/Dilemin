@@ -98,5 +98,13 @@
   "reportingPerson": "Segnalato da",
   "dismissReport": "Ignora",
   "markReviewed": "Segna come esaminato",
-  "deletedAccount": "Account eliminato"
+  "deletedAccount": "Account eliminato",
+  "forgotPassword": "Password dimenticata?",
+  "passwordRecoveryHint": "Inserisci la tua email per richiedere un codice di recupero a sei cifre.",
+  "sendRecoveryCode": "Invia codice",
+  "recoveryCodeSent": "Se l’account esiste, è stato inviato un codice. Controlla la posta.",
+  "newPassword": "Nuova password",
+  "resetPassword": "Reimposta password",
+  "passwordResetSuccess": "Password modificata. Accedi con la nuova password.",
+  "passwordResetFailed": "Reimpostazione non riuscita. Controlla il codice o richiedine un altro."
 }

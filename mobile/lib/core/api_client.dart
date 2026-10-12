@@ -66,6 +66,20 @@ class ApiClient {
     return (json['token'] as String, SessionUser.fromJson(json['user'] as Map<String, dynamic>));
   }
 
+  Future<void> requestPasswordRecovery({required String email, required String locale}) async {
+    await _send('POST', '/api/v1/auth/password/request', body: {
+      'email': email, 'locale': locale,
+    });
+  }
+
+  Future<void> confirmPasswordRecovery({
+    required String email, required String code, required String password,
+  }) async {
+    await _send('POST', '/api/v1/auth/password/confirm', body: {
+      'email': email, 'code': code, 'password': password,
+    });
+  }
+
   Future<SessionUser> me() async {
     final json = await _send('GET', '/api/v1/auth/me');
     return SessionUser.fromJson(json['user'] as Map<String, dynamic>);
