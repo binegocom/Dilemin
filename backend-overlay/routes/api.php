@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Middleware\EnsureAccountActive;
 use App\Http\Controllers\Api\V1\BlockController;
 use App\Http\Controllers\Api\V1\ConversationController;
 use App\Http\Controllers\Api\V1\DiscoveryController;
@@ -41,7 +42,7 @@ Route::prefix('v1')->group(function (): void {
             ->middleware('throttle:dilemin-verification-request');
         Route::post('/auth/email/confirm', [EmailVerificationController::class, 'confirm'])
             ->middleware('throttle:dilemin-verification-confirm');
-        Route::middleware('verified')->group(function (): void {
+        Route::middleware(['verified', EnsureAccountActive::class])->group(function (): void {
         Route::post('/presence/heartbeat', [PresenceController::class, 'heartbeat']);
         Route::post('/presence/offline', [PresenceController::class, 'offline']);
         Route::get('/discovery/online', [DiscoveryController::class, 'online']);
@@ -66,6 +67,8 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/moderation/reports', [ReportReviewController::class, 'index']);
         Route::post('/moderation/reports/{report}/review', [ReportReviewController::class, 'review'])
             ->whereNumber('report')->middleware('throttle:dilemin-sensitive');
+        Route::post('/moderation/users/{user}/restore', [ReportReviewController::class, 'restore'])
+            ->whereNumber('user')->middleware('throttle:dilemin-sensitive');
         Route::post('/users/{user}/block', [BlockController::class, 'store']);
         Route::delete('/users/{user}/block', [BlockController::class, 'destroy']);
         Route::post('/users/{user}/report', [SafetyController::class, 'report'])->middleware('throttle:dilemin-sensitive');

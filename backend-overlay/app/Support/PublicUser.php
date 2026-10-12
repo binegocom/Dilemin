@@ -16,6 +16,7 @@ final class PublicUser
             ...ProfilePhoto::forUser($user, $owner),
             ...($owner ? ['is_moderator' => (bool) $user->is_moderator,
                 'email_verified' => $user->hasVerifiedEmail(),
+                'suspended' => $user->suspended_at !== null,
                 'push_messages_enabled' => (bool) $user->push_messages_enabled] : []),
         ];
     }

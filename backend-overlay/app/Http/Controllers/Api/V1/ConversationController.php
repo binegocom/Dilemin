@@ -19,6 +19,8 @@ class ConversationController extends Controller
             ->join('users as low', 'low.id', '=', 'c.user_low_id')
             ->join('users as high', 'high.id', '=', 'c.user_high_id')
             ->where(fn ($q) => $q->where('c.user_low_id', $id)->orWhere('c.user_high_id', $id))
+            ->whereNull('low.suspended_at')
+            ->whereNull('high.suspended_at')
             ->whereNotExists(function ($q) use ($id): void {
                 $q->selectRaw('1')->from('blocks as b')
                     ->where(fn ($sub) => $sub->whereColumn('b.blocker_id', 'c.user_low_id')->whereColumn('b.blocked_id', 'c.user_high_id'))

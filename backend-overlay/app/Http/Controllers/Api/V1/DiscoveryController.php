@@ -29,6 +29,7 @@ class DiscoveryController extends Controller
             })
             ->whereIn('users.id', $ids)
             ->where('users.online_visible', true)
+            ->whereNull('users.suspended_at')
             ->whereNotIn('users.id', $blocked)
             ->whereNotIn('users.id', $blockedBy)
             ->orderBy('users.id')

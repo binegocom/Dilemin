@@ -9,6 +9,9 @@ final class SocialAccess
 {
     public static function blocked(int $a, int $b): bool
     {
+        if (DB::table('users')->whereIn('id', [$a, $b])
+            ->whereNotNull('suspended_at')->exists()) return true;
+
         return DB::table('blocks')
             ->where(function ($query) use ($a, $b): void {
                 $query->where('blocker_id', $a)->where('blocked_id', $b);

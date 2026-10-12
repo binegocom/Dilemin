@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Support\PresenceStore;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,18 +38,88 @@ class ReportReviewController extends Controller
         ])]);
     }
 
-    public function review(Request $request, int $report): JsonResponse
+    public function review(Request $request, PresenceStore $presence, int $report): JsonResponse
     {
         $this->authorizeModerator($request);
         $data = $request->validate([
-            'decision' => ['required', 'in:reviewed,dismissed'],
-            'note' => ['nullable', 'string', 'max:500'],
+            'decision' => ['required', 'in:reviewed,dismissed,suspended'],
+            'note' => ['required_if:decision,suspended', 'nullable', 'string', 'min:3', 'max:500'],
         ]);
-        $changed = DB::table('user_reports')->where('id', $report)->where('status', 'pending')
-            ->update(['status' => $data['decision'], 'review_note' => $data['note'] ?? null,
-                'reviewed_by' => $request->user()->id, 'reviewed_at' => now(),
-                'updated_at' => now()]);
-        abort_unless($changed, 409);
+        $targetId = DB::transaction(function () use ($request, $report, $data): ?int {
+            $record = DB::table('user_reports')->where('id', $report)
+                ->lockForUpdate()->first();
+            abort_unless($record && $record->status === 'pending', 409);
+            $targetId = null;
+            if ($data['decision'] === 'suspended') {
+                $targetId = (int) $record->reported_user_id;
+                abort_unless($targetId > 0 && $targetId !== (int) $request->user()->id, 422);
+                $target = DB::table('users')->where('id', $targetId)
+                    ->lockForUpdate()->first();
+                abort_unless($target, 422);
+                abort_if((bool) $target->is_moderator, 403,
+                    'Staff accounts require separate administrative review.');
+                DB::table('users')->where('id', $targetId)->update([
+                    'suspended_at' => now(), 'online_visible' => false,
+                    'updated_at' => now(),
+                ]);
+                DB::table('moderation_actions')->insert([
+                    'moderator_id' => $request->user()->id,
+                    'target_user_id' => $targetId,
+                    'report_id' => $report,
+                    'action' => 'suspended',
+                    'reason' => $data['note'],
+                    'created_at' => now(), 'updated_at' => now(),
+                ]);
+            }
+            DB::table('user_reports')->where('id', $report)->update([
+                'status' => $data['decision'],
+                'review_note' => $data['note'] ?? null,
+                'reviewed_by' => $request->user()->id,
+                'reviewed_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return $targetId;
+        });
+        if ($targetId !== null) {
+            try {
+                $presence->markOffline($targetId);
+            } catch (\Throwable $exception) {
+                // The database suspension immediately blocks discovery and
+                // messaging; cached presence also expires automatically.
+                report($exception);
+            }
+        }
         return response()->json(['status' => $data['decision']]);
+    }
+
+    public function restore(Request $request, User $user): JsonResponse
+    {
+        $this->authorizeModerator($request);
+        abort_if($user->is($request->user()) || $user->is_moderator, 403);
+        $data = $request->validate([
+            'reason' => ['required', 'string', 'min:3', 'max:500'],
+        ]);
+        DB::transaction(function () use ($request, $user, $data): void {
+            $locked = DB::table('users')->where('id', $user->id)
+                ->lockForUpdate()->first();
+            abort_unless($locked && $locked->suspended_at !== null, 409);
+            DB::table('users')->where('id', $user->id)->update([
+                'suspended_at' => null,
+                'online_visible' => false,
+                'updated_at' => now(),
+            ]);
+            DB::table('moderation_actions')->insert([
+                'moderator_id' => $request->user()->id,
+                'target_user_id' => $user->id,
+                'report_id' => null,
+                'action' => 'restored',
+                'reason' => $data['reason'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        });
+
+        return response()->json(['status' => 'restored']);
     }
 }
