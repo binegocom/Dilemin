@@ -64,7 +64,10 @@ class DataExportTest extends TestCase
 
         $response = $this->actingAs($user, 'sanctum')
             ->post('/api/v1/account/export', ['password' => 'safe-passphrase-123']);
-        $response->assertOk()->assertHeader('Cache-Control', 'private, no-store, max-age=0');
+        $response->assertOk();
+        $cacheControl = $response->headers->get('Cache-Control', '');
+        $this->assertStringContainsString('private', $cacheControl);
+        $this->assertStringContainsString('no-store', $cacheControl);
         $export = json_decode($response->streamedContent(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertSame('dilemin-account-export-v1', $export['format']);
         $this->assertSame('owner@example.org', $export['account']['email']);

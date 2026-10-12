@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:image_picker/image_picker.dart' show XFile;
 
 import '../../core/api_client.dart';
 import '../../l10n/app_localizations.dart';
