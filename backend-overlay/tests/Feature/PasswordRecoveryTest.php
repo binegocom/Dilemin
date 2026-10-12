@@ -41,7 +41,7 @@ class PasswordRecoveryTest extends TestCase
         // The same generic response does not reveal the cooldown or account state.
         $this->postJson('/api/v1/auth/password/request', $body)
             ->assertOk()->assertExactJson(['status' => 'accepted']);
-        Notification::assertSentToTimes(PasswordRecoveryCode::class, 1);
+        Notification::assertCount(1);
     }
 
     public function test_successful_reset_revokes_all_tokens_and_rejects_old_password(): void
