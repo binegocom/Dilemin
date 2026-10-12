@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
 import '../../core/models.dart';
+import '../../core/push_device_registration.dart';
 import '../../l10n/app_localizations.dart';
 import '../account/account_screen.dart';
 import '../chat/chat_screen.dart';
@@ -32,8 +33,54 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   int _tab = 0;
+  late final PushDeviceRegistration _push;
   int _directoryRevision = 0;
   int _conversationsRevision = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _push = PushDeviceRegistration(
+      api: widget.api,
+      onOpenChat: _openPushConversation,
+      onForegroundChat: () {
+        if (mounted) setState(() => _conversationsRevision++);
+      },
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+      _push.start(deviceLocale);
+    });
+  }
+
+  Future<void> _openPushConversation(String conversationId) async {
+    if (!mounted) return;
+    try {
+      final items = await widget.api.conversations();
+      if (!mounted) return;
+      for (final item in items) {
+        if (item.id == conversationId) {
+          await _openChat(item.id, item.person.name);
+          return;
+        }
+      }
+    } catch (_) {
+      // Unknown/blocked conversations are never opened directly.
+    }
+    if (mounted) _selectTab(2);
+  }
+
+  Future<void> _signOut() async {
+    await _push.unregister();
+    await widget.onSignOut();
+  }
+
+  @override
+  void dispose() {
+    _push.dispose();
+    super.dispose();
+  }
 
   Future<void> _openChat(String conversationId, String name) async {
     await Navigator.of(context).push(MaterialPageRoute<void>(
@@ -74,7 +121,7 @@ class _HomeShellState extends State<HomeShell> {
         RadarScreen(
           api: widget.api, user: widget.user,
           onUserChanged: widget.onUserChanged,
-          onSignOut: widget.onSignOut,
+          onSignOut: _signOut,
           onSessionExpired: widget.onSessionExpired,
           onPersonTap: _openPerson,
         ),

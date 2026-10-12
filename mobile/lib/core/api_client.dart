@@ -44,6 +44,22 @@ class ApiClient {
     return decoded;
   }
 
+  Future<void> registerPushDevice({
+    required String token,
+    required String platform,
+    required String locale,
+  }) async {
+    await _send('PUT', '/api/v1/push/devices', body: {
+      'token': token,
+      'platform': platform,
+      'locale': locale,
+    });
+  }
+
+  Future<void> unregisterPushDevice(String token) async {
+    await _send('DELETE', '/api/v1/push/devices', body: {'token': token});
+  }
+
   Future<String> authorizeBroadcast({
     required String socketId,
     required String channelName,
