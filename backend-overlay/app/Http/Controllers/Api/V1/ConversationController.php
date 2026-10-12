@@ -27,6 +27,17 @@ class ConversationController extends Controller
             ->orderByDesc('c.updated_at')->orderByDesc('c.id')->limit(50)
             ->get(['c.id', 'c.user_low_id', 'c.user_high_id', 'low.name as low_name', 'high.name as high_name', 'c.updated_at']);
 
+        $conversationIds = $rows->pluck('id')->all();
+        $unreadCounts = $conversationIds === [] ? collect() : DB::table('messages as m')
+            ->join('conversations as c', 'c.id', '=', 'm.conversation_id')
+            ->whereIn('m.conversation_id', $conversationIds)
+            ->where('m.sender_id', '!=', $id)
+            ->whereRaw('m.id > CASE WHEN c.user_low_id = ? THEN COALESCE(c.last_read_low_message_id, 0) ELSE COALESCE(c.last_read_high_message_id, 0) END', [$id])
+            ->groupBy('m.conversation_id')
+            ->select('m.conversation_id')
+            ->selectRaw('COUNT(*) AS total')
+            ->pluck('total', 'm.conversation_id');
+
         return response()->json(['data' => $rows->map(fn ($row) => [
             'id' => (string) $row->id,
             'person' => [
@@ -34,6 +45,7 @@ class ConversationController extends Controller
                 'display_name' => $row->user_low_id === $id ? $row->high_name : $row->low_name,
             ],
             'updated_at' => $row->updated_at,
+            'unread_count' => (int) ($unreadCounts[$row->id] ?? 0),
         ])]);
     }
 

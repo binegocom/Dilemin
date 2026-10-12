@@ -138,6 +138,11 @@ class ApiClient {
         .toList(growable: false);
   }
 
+  Future<void> markMessagesRead(String conversationId, String messageId) async {
+    await _send('POST', '/api/v1/conversations/${Uri.encodeComponent(conversationId)}/read',
+        body: {'message_id': int.parse(messageId)});
+  }
+
   Future<String> sendMessage(String conversationId, String body, {String? clientId}) async {
     final json = await _send('POST', '/api/v1/conversations/${Uri.encodeComponent(conversationId)}/messages', body: {
       'body': body,

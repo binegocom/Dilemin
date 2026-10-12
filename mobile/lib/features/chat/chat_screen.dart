@@ -37,6 +37,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   bool _failed = false;
   String? _pendingClientId;
   String? _pendingBody;
+  String? _lastReadId;
 
   @override
   void initState() {
@@ -60,6 +61,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     try {
       final data = await widget.api.messages(widget.conversationId);
       if (mounted) setState(() { _messages = data; _loading = false; _failed = false; });
+      if (mounted && _active && data.isNotEmpty && data.first.id != _lastReadId) {
+        try {
+          await widget.api.markMessagesRead(widget.conversationId, data.first.id);
+          _lastReadId = data.first.id;
+        } catch (_) {
+          // Keep the conversation readable; retry the acknowledgement on refresh.
+        }
+      }
     } catch (_) {
       if (mounted) setState(() { _loading = false; _failed = true; });
     } finally { _refreshing = false; }

@@ -117,5 +117,13 @@
   "sessionPrivacyNote": "Gérez les appareils connectés. Pour fermer la session actuelle, utilisez Déconnexion.",
   "exportData": "Exporter mes données",
   "exportPrivacyNote": "Téléchargez un fichier JSON contenant vos données, messages et photo de profil. Confirmez avec votre mot de passe et conservez le fichier en lieu sûr.",
-  "exportFailed": "Échec de l’export. Vérifiez le mot de passe, la connexion et l’espace de stockage."
+  "exportFailed": "Échec de l’export. Vérifiez le mot de passe, la connexion et l’espace de stockage.",
+  "unreadMessages": "{count} messages non lus",
+  "@unreadMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

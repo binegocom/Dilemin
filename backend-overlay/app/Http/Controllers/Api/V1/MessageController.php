@@ -36,6 +36,29 @@ class MessageController extends Controller
             ])]);
     }
 
+    public function markRead(Request $request, int $conversation): JsonResponse
+    {
+        $this->authorizedConversation($request, $conversation);
+        $data = $request->validate(['message_id' => ['required', 'integer', 'min:1']]);
+        $actorId = $request->user()->id;
+        DB::transaction(function () use ($conversation, $actorId, $data): void {
+            $row = DB::table('conversations')->where('id', $conversation)->lockForUpdate()->first();
+            abort_unless($row, 404);
+            abort_unless($actorId === $row->user_low_id || $actorId === $row->user_high_id, 404);
+            abort_if(SocialAccess::blocked($row->user_low_id, $row->user_high_id), 403);
+            abort_unless(DB::table('messages')->where('conversation_id', $conversation)
+                ->where('id', $data['message_id'])->exists(), 422);
+            $field = $actorId === $row->user_low_id
+                ? 'last_read_low_message_id' : 'last_read_high_message_id';
+            if ((int) $data['message_id'] > (int) ($row->{$field} ?? 0)) {
+                DB::table('conversations')->where('id', $conversation)->update([
+                    $field => $data['message_id'],
+                ]);
+            }
+        });
+        return response()->json(['status' => 'read']);
+    }
+
     public function store(Request $request, int $conversation): JsonResponse
     {
         $this->authorizedConversation($request, $conversation);

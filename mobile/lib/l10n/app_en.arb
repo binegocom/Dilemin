@@ -117,5 +117,13 @@
   "sessionPrivacyNote": "Manage signed-in devices. To end the current session, use Sign out.",
   "exportData": "Export my data",
   "exportPrivacyNote": "Download a JSON file containing your account data, messages and profile photo. Confirm with your password and keep the file in a safe place.",
-  "exportFailed": "Export failed. Check your password, connection and available storage."
+  "exportFailed": "Export failed. Check your password, connection and available storage.",
+  "unreadMessages": "{count} unread messages",
+  "@unreadMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

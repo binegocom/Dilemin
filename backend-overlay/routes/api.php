@@ -63,6 +63,7 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/conversations', [ConversationController::class, 'index']);
         Route::post('/conversations', [ConversationController::class, 'store'])->middleware('throttle:dilemin-sensitive');
         Route::get('/conversations/{conversation}/messages', [MessageController::class, 'index'])->whereNumber('conversation');
+        Route::post('/conversations/{conversation}/read', [MessageController::class, 'markRead'])->middleware('throttle:dilemin-sensitive')->whereNumber('conversation');
         Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware('throttle:dilemin-messages')->whereNumber('conversation');
         });
     });

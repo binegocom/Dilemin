@@ -48,14 +48,16 @@ class OnlinePerson {
 }
 
 class ConversationPreview {
-  const ConversationPreview({required this.id, required this.person});
+  const ConversationPreview({required this.id, required this.person, this.unreadCount = 0});
   final String id;
   final OnlinePerson person;
+  final int unreadCount;
 
   factory ConversationPreview.fromJson(Map<String, dynamic> json) =>
       ConversationPreview(
         id: json['id'].toString(),
         person: OnlinePerson.fromJson(json['person'] as Map<String, dynamic>),
+        unreadCount: (json['unread_count'] as num?)?.toInt() ?? 0,
       );
 }
 

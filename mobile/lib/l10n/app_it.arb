@@ -117,5 +117,13 @@
   "sessionPrivacyNote": "Gestisci i dispositivi connessi. Per terminare la sessione attuale usa Esci.",
   "exportData": "Esporta i miei dati",
   "exportPrivacyNote": "Scarica un file JSON con i dati del tuo account, i messaggi e la foto del profilo. Conferma con la password e conserva il file al sicuro.",
-  "exportFailed": "Esportazione non riuscita. Controlla password, connessione e spazio disponibile."
+  "exportFailed": "Esportazione non riuscita. Controlla password, connessione e spazio disponibile.",
+  "unreadMessages": "{count} messaggi non letti",
+  "@unreadMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -117,5 +117,13 @@
   "sessionPrivacyNote": "Verwalte deine angemeldeten Geräte. Die aktuelle Sitzung kannst du über Abmelden beenden.",
   "exportData": "Meine Daten exportieren",
   "exportPrivacyNote": "Lade eine JSON-Datei mit deinen Kontodaten, Nachrichten und deinem Profilfoto herunter. Gib zur Bestätigung dein Passwort ein. Speichere die Datei an einem sicheren Ort.",
-  "exportFailed": "Datenexport fehlgeschlagen. Prüfe dein Passwort, deine Verbindung und den Speicherplatz."
+  "exportFailed": "Datenexport fehlgeschlagen. Prüfe dein Passwort, deine Verbindung und den Speicherplatz.",
+  "unreadMessages": "{count} ungelesene Nachrichten",
+  "@unreadMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

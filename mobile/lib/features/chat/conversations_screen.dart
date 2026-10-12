@@ -95,7 +95,12 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
               leading: ProfileAvatar(name: entry.person.name),
               title: Text(entry.person.name, style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text(l10n.openConversation),
-              trailing: const Icon(Icons.chevron_right),
+              trailing: entry.unreadCount > 0
+                ? Semantics(label: l10n.unreadMessages(entry.unreadCount), child: Badge(
+                    label: Text(entry.unreadCount > 99 ? '99+' : '${entry.unreadCount}'),
+                    child: const Icon(Icons.chat_bubble_outline),
+                  ))
+                : const Icon(Icons.chevron_right),
               onTap: () async {
                 await widget.onConversationTap(entry.id, entry.person.name);
                 if (mounted) _refresh();
