@@ -8,6 +8,8 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Kreait\Firebase\Factory;
+use Kreait\Firebase\Exception\Messaging\NotFound;
+use Kreait\Firebase\Exception\Messaging\SenderIdMismatch;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 
@@ -61,7 +63,14 @@ final class SendMessagePush implements ShouldQueue
                     'conversation_id' => (string) $conversation->id,
                     'message_id' => (string) $message->id,
                 ]);
-            $messaging->send($cloud);
+            try {
+                $messaging->send($cloud);
+            } catch (NotFound|SenderIdMismatch $exception) {
+                // Replaced, uninstalled, or foreign-project devices must not be retried.
+                DB::table('push_devices')->where('id', $device->id)
+                    ->where('token_hash', $device->token_hash)->delete();
+                report($exception);
+            }
         }
     }
 }
