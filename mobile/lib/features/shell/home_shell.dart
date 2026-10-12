@@ -131,7 +131,7 @@ class _HomeShellState extends State<HomeShell> {
     return Scaffold(
       body: IndexedStack(index: _tab, children: [
         RadarScreen(
-          api: widget.api, user: widget.user,
+          api: widget.api, user: widget.user, active: _tab == 0,
           onUserChanged: widget.onUserChanged,
           onSignOut: _signOut,
           onSessionExpired: widget.onSessionExpired,

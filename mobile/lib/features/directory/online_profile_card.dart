@@ -24,7 +24,7 @@ class OnlineProfileCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return Semantics(
       button: true,
-      label: '\${person.name}, \${l10n.onlineStatus}',
+      label: '${person.name}, ${l10n.onlineStatus}',
       child: Material(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(22),
@@ -44,7 +44,7 @@ class OnlineProfileCard extends StatelessWidget {
             ),
           ),
           child: InkWell(
-            key: ValueKey('online-profile-\${person.id}'),
+            key: ValueKey('online-profile-${person.id}'),
             onTap: onTap,
             borderRadius: BorderRadius.circular(22),
             child: LayoutBuilder(builder: (context, constraints) {

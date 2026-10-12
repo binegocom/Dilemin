@@ -6,7 +6,7 @@ import '../../core/api_client.dart';
 import '../../core/models.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui/palette.dart';
-import '../photos/private_avatar.dart';
+import 'online_profile_card.dart';
 
 class DirectoryScreen extends StatefulWidget {
   const DirectoryScreen({
@@ -120,25 +120,11 @@ class _DirectoryScreenState extends State<DirectoryScreen> with WidgetsBindingOb
               ),
               itemBuilder: (context, index) {
                 final person = people[index];
-                return Material(
-                  color: Palette.surface,
-                  borderRadius: BorderRadius.circular(22),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(22),
-                    onTap: () => widget.onPersonTap(person),
-                    child: Padding(padding: const EdgeInsets.all(14), child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        PrivateAvatar(api: widget.api, userId: person.id,
-                          name: person.name, photoId: person.photoId, size: 65, isOnline: true),
-                        const SizedBox(height: 13),
-                        Text(person.name, maxLines: 1, overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontWeight: FontWeight.w700)),
-                        const SizedBox(height: 4),
-                        Text(l10n.onlineStatus, style: const TextStyle(color: Palette.mint, fontSize: 12)),
-                      ],
-                    )),
-                  ),
+                return OnlineProfileCard(
+                  key: ValueKey(person.id),
+                  api: widget.api,
+                  person: person,
+                  onTap: () => widget.onPersonTap(person),
                 );
               },
             );

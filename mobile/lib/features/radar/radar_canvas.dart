@@ -25,6 +25,7 @@ class RadarCanvas extends StatefulWidget {
   const RadarCanvas({
     required this.people,
     required this.centerName,
+    this.active = true,
     this.api,
     this.centerUserId,
     this.centerPhotoId,
@@ -33,6 +34,7 @@ class RadarCanvas extends StatefulWidget {
   });
   final List<OnlinePerson> people;
   final String centerName;
+  final bool active;
   final ApiClient? api;
   final String? centerUserId;
   final String? centerPhotoId;
@@ -53,7 +55,18 @@ class _RadarCanvasState extends State<RadarCanvas> with SingleTickerProviderStat
   void didChangeDependencies() {
     super.didChangeDependencies();
     final reduceMotion = MediaQuery.of(context).disableAnimations;
-    if (reduceMotion) {
+    if (reduceMotion || !widget.active) {
+      _controller.stop();
+    } else if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant RadarCanvas oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+    if (reduceMotion || !widget.active) {
       _controller.stop();
     } else if (!_controller.isAnimating) {
       _controller.repeat();
@@ -84,7 +97,7 @@ class _RadarCanvasState extends State<RadarCanvas> with SingleTickerProviderStat
             Positioned.fill(
               child: IgnorePointer(child: RadarGlow(progress: _controller)),
             ),
-            if (!reduceMotion && people.isNotEmpty)
+            if (!reduceMotion && widget.active && people.isNotEmpty)
               Positioned.fill(
                 child: IgnorePointer(child: GameWidget(game: _particles)),
               ),

@@ -7,12 +7,15 @@ import '../../core/models.dart';
 import '../../l10n/app_localizations.dart';
 import '../animations/lottie_online_pulse.dart';
 import '../animations/rive_presence_indicator.dart';
+import '../directory/online_profile_card.dart';
+import '../../ui/palette.dart';
 import 'radar_canvas.dart';
 
 class RadarScreen extends StatefulWidget {
   const RadarScreen({
     required this.api,
     required this.user,
+    this.active = true,
     required this.onUserChanged,
     required this.onSignOut,
     required this.onSessionExpired,
@@ -21,6 +24,7 @@ class RadarScreen extends StatefulWidget {
   });
 
   final ApiClient api;
+  final bool active;
   final SessionUser user;
   final ValueChanged<SessionUser> onUserChanged;
   final Future<void> Function() onSignOut;
@@ -126,13 +130,24 @@ class _RadarScreenState extends State<RadarScreen> with WidgetsBindingObserver {
             child: RefreshIndicator(
               onRefresh: _tick,
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 36),
+                padding: const EdgeInsets.fromLTRB(18, 14, 18, 36),
                 children: [
                   Row(children: [
-                    const Icon(Icons.favorite_rounded, color: Color(0xFFFA4B86), size: 27),
-                    const SizedBox(width: 10),
-                    Expanded(child: Text('Dılêmın', style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w800, letterSpacing: -.8))),
+                    Container(
+                      width: 42, height: 42,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        gradient: const LinearGradient(
+                          colors: [Palette.rose, Color(0xFF803EAC)],
+                        ),
+                      ),
+                      child: const Icon(Icons.favorite_rounded,
+                        color: Colors.white, size: 24),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text(l10n.appName,
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w800, letterSpacing: -.8))),
                     IconButton(
                       tooltip: l10n.logOut,
                       onPressed: _saving ? null : () async {
@@ -142,29 +157,72 @@ class _RadarScreenState extends State<RadarScreen> with WidgetsBindingObserver {
                       icon: const Icon(Icons.logout_rounded),
                     ),
                   ]),
-                  const SizedBox(height: 22),
-                  Text(l10n.radarTitle, style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 6),
-                  Text(l10n.radarSubtitle, style: const TextStyle(color: Color(0xFFAAA9BD), height: 1.4)),
-                  const SizedBox(height: 16),
-                  Center(child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 420),
-                    child: RadarCanvas(
-                      api: widget.api,
-                      people: _people,
-                      centerName: widget.user.name,
-                      centerUserId: widget.user.id,
-                      centerPhotoId: widget.user.photoId,
-                      onPersonTap: widget.onPersonTap,
+                  const SizedBox(height: 24),
+                  Row(children: [
+                    Expanded(child: Text(l10n.radarTitle,
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w800))),
+                    if (!_loading && !_failed)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+                        decoration: BoxDecoration(
+                          color: Palette.mint.withValues(alpha: .11),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Palette.mint.withValues(alpha: .3)),
+                        ),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          const Icon(Icons.circle, color: Palette.mint, size: 8),
+                          const SizedBox(width: 7),
+                          Text(l10n.onlineCount(_people.length),
+                            style: const TextStyle(color: Palette.mint,
+                              fontWeight: FontWeight.w600, fontSize: 11)),
+                        ]),
+                      ),
+                  ]),
+                  const SizedBox(height: 7),
+                  Text(l10n.radarSubtitle,
+                    style: const TextStyle(color: Palette.secondary, height: 1.5)),
+                  const SizedBox(height: 18),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: const RadialGradient(
+                        center: Alignment.center,
+                        radius: .9,
+                        colors: [Color(0xFF242039), Color(0xFF111525)],
+                      ),
+                      borderRadius: BorderRadius.circular(28),
+                      border: Border.all(color: Palette.border),
                     ),
-                  )),
-                  const SizedBox(height: 12),
-                  Card(
-                    color: const Color(0xFF17192A),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+                      child: Center(child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 420),
+                        child: RepaintBoundary(child: RadarCanvas(
+                          api: widget.api,
+                          active: widget.active,
+                          people: _people,
+                          centerName: widget.user.name,
+                          centerUserId: widget.user.id,
+                          centerPhotoId: widget.user.photoId,
+                          onPersonTap: widget.onPersonTap,
+                        )),
+                      )),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Palette.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Palette.border),
+                    ),
                     child: SwitchListTile.adaptive(
-                      title: Text(l10n.visibility),
-                      subtitle: Text(l10n.privacyNote, style: const TextStyle(fontSize: 12)),
+                      secondary: Icon(Icons.visibility_outlined,
+                        color: widget.user.onlineVisible ? Palette.mint : Palette.secondary),
+                      title: Text(l10n.visibility,
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
+                      subtitle: Text(l10n.privacyNote,
+                        style: const TextStyle(fontSize: 12, color: Palette.secondary)),
                       value: widget.user.onlineVisible,
                       onChanged: _saving ? null : _setVisibility,
                     ),
@@ -203,39 +261,19 @@ class _RadarScreenState extends State<RadarScreen> with WidgetsBindingObserver {
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: columns,
-                          childAspectRatio: .83,
+                          childAspectRatio: .82,
                           mainAxisSpacing: 10,
                           crossAxisSpacing: 10,
                         ),
                         itemCount: _people.length,
                         itemBuilder: (context, index) {
                           final person = _people[index];
-                          return InkWell(
+                          return OnlineProfileCard(
                             key: ValueKey(person.id),
+                            api: widget.api,
+                            person: person,
                             onTap: () => widget.onPersonTap(person),
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF17192A),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: const Color(0xFF302940)),
-                            ),
-                            padding: const EdgeInsets.all(8),
-                            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                              Stack(clipBehavior: Clip.none, children: [
-                                CircleAvatar(radius: 27, backgroundColor: const Color(0xFF793C6B),
-                                  child: Text(person.name.trim().isEmpty ? '•' : person.name.trim().substring(0, 1).toUpperCase(),
-                                    style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w700))),
-                                Positioned(right: -1, bottom: 0, child: Container(width: 13, height: 13,
-                                  decoration: BoxDecoration(color: const Color(0xFF4CE0B6),
-                                    shape: BoxShape.circle, border: Border.all(color: const Color(0xFF17192A), width: 2)))),
-                              ]),
-                              const SizedBox(height: 8),
-                              Text(person.name, textAlign: TextAlign.center,
-                                maxLines: 1, overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontWeight: FontWeight.w600)),
-                            ]),
-                          ));
+                          );
                         },
                       );
                     }),
