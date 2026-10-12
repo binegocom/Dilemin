@@ -24,6 +24,8 @@ class BroadcastAuthorizationTest extends TestCase
 
     private function authorize(User $user, string $channel): \Illuminate\Testing\TestResponse
     {
+        // Simulate a fresh HTTP request: Laravel's test application caches auth guards.
+        app('auth')->forgetGuards();
         $this->withToken($user->createToken('realtime-test')->plainTextToken);
         $this->getJson('/api/v1/auth/me')->assertOk();
         return $this->postJson('/api/v1/realtime/authorize', [
