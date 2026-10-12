@@ -39,14 +39,15 @@ class ModerationReportTest extends TestCase
             'reason' => 'harassment', 'details' => 'Inappropriate messages',
         ])->assertCreated();
         $this->getJson('/api/v1/moderation/reports')->assertForbidden();
-        $this->postJson('/api/v1/moderation/reports/1/review', [
+        $this->postJson('/api/v1/moderation/reports/'.$reportId.'/review', [
             'decision' => 'dismissed',
         ])->assertForbidden();
 
         $this->actingAs($moderator, 'sanctum');
-        $this->getJson('/api/v1/moderation/reports')->assertOk()
+        $response = $this->getJson('/api/v1/moderation/reports')->assertOk()
             ->assertJsonCount(1, 'data')->assertJsonPath('data.0.reason', 'harassment');
-        $this->postJson('/api/v1/moderation/reports/1/review', [
+        $reportId = $response->json('data.0.id');
+        $this->postJson('/api/v1/moderation/reports/'.$reportId.'/review', [
             'decision' => 'reviewed', 'note' => 'Escalated to safety lead',
         ])->assertOk()->assertJsonPath('status', 'reviewed');
         $this->getJson('/api/v1/moderation/reports')->assertOk()->assertJsonCount(0, 'data');
