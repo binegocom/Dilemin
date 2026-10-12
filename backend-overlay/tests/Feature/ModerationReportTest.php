@@ -39,7 +39,9 @@ class ModerationReportTest extends TestCase
             'reason' => 'harassment', 'details' => 'Inappropriate messages',
         ])->assertCreated();
         $this->getJson('/api/v1/moderation/reports')->assertForbidden();
-        $this->postJson('/api/v1/moderation/reports/'.$reportId.'/review', [
+        // Authentication is checked before report lookup; the requested ID
+        // need not exist for this unauthorized-access assertion.
+        $this->postJson('/api/v1/moderation/reports/1/review', [
             'decision' => 'dismissed',
         ])->assertForbidden();
 
