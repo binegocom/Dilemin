@@ -24,8 +24,16 @@ class ConversationController extends Controller
                     ->where(fn ($sub) => $sub->whereColumn('b.blocker_id', 'c.user_low_id')->whereColumn('b.blocked_id', 'c.user_high_id'))
                     ->orWhere(fn ($sub) => $sub->whereColumn('b.blocker_id', 'c.user_high_id')->whereColumn('b.blocked_id', 'c.user_low_id'));
             })
+            ->select(['c.id', 'c.user_low_id', 'c.user_high_id',
+                'low.name as low_name', 'high.name as high_name', 'c.updated_at'])
+            ->selectSub(function ($query): void {
+                $query->from('messages as latest_message')
+                    ->select('latest_message.body')
+                    ->whereColumn('latest_message.conversation_id', 'c.id')
+                    ->orderByDesc('latest_message.id')->limit(1);
+            }, 'last_message_body')
             ->orderByDesc('c.updated_at')->orderByDesc('c.id')->limit(50)
-            ->get(['c.id', 'c.user_low_id', 'c.user_high_id', 'low.name as low_name', 'high.name as high_name', 'c.updated_at']);
+            ->get();
 
         $conversationIds = $rows->pluck('id')->all();
         $unreadCounts = $conversationIds === [] ? collect() : DB::table('messages as m')
@@ -45,6 +53,7 @@ class ConversationController extends Controller
                 'display_name' => $row->user_low_id === $id ? $row->high_name : $row->low_name,
             ],
             'updated_at' => $row->updated_at,
+            'last_message' => $row->last_message_body,
             'unread_count' => (int) ($unreadCounts[$row->id] ?? 0),
         ])]);
     }

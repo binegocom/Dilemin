@@ -108,7 +108,12 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
               contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 7),
               leading: ProfileAvatar(name: entry.person.name),
               title: Text(entry.person.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text(l10n.openConversation),
+              subtitle: Text(
+                entry.lastMessage?.isNotEmpty == true
+                    ? entry.lastMessage! : l10n.openConversation,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
               trailing: entry.unreadCount > 0
                 ? Semantics(label: l10n.unreadMessages(entry.unreadCount), child: Badge(
                     label: Text(entry.unreadCount > 99 ? '99+' : '${entry.unreadCount}'),
