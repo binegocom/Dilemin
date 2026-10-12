@@ -150,7 +150,7 @@ class _RadarScreenState extends State<RadarScreen> with WidgetsBindingObserver {
                   const SizedBox(height: 16),
                   Center(child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 420),
-                    child: RadarCanvas(people: _people, centerName: widget.user.name),
+                    child: RadarCanvas(people: _people, centerName: widget.user.name, onPersonTap: widget.onPersonTap),
                   )),
                   const SizedBox(height: 12),
                   Card(

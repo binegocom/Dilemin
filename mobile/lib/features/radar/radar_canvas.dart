@@ -20,9 +20,10 @@ Offset markerPosition(String userId, Size size) {
 }
 
 class RadarCanvas extends StatefulWidget {
-  const RadarCanvas({required this.people, required this.centerName, super.key});
+  const RadarCanvas({required this.people, required this.centerName, this.onPersonTap, super.key});
   final List<OnlinePerson> people;
   final String centerName;
+  final ValueChanged<OnlinePerson>? onPersonTap;
 
   @override
   State<RadarCanvas> createState() => _RadarCanvasState();
@@ -91,7 +92,10 @@ class _RadarCanvasState extends State<RadarCanvas> with SingleTickerProviderStat
       left: position.dx - size / 2, top: position.dy - size / 2,
       child: Semantics(
         label: label,
-        child: Container(
+        button: !center,
+        child: GestureDetector(
+          onTap: center ? null : () => widget.onPersonTap?.call(person),
+          child: Container(
           width: size, height: size,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -100,9 +104,9 @@ class _RadarCanvasState extends State<RadarCanvas> with SingleTickerProviderStat
             boxShadow: [BoxShadow(color: const Color(0xFFFF4B86).withValues(alpha: center ? .34 : .14),
               blurRadius: 20, spreadRadius: 3)],
           ),
-          child: Center(child: Text(label.isEmpty ? '•' : label.substring(0, 1).toUpperCase(),
+          child: Center(child: Text(label.isEmpty ? '•' : label.characters.first.toUpperCase(),
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: center ? 26 : 17))),
-        ),
+        )),
       ),
     );
   }
