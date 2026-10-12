@@ -35,7 +35,12 @@ class SafetyController extends Controller
         $data = $request->validate(['password' => ['required', 'string']]);
         $user = $request->user();
         abort_unless(Hash::check($data['password'], $user->password), 422);
-        $presence->markOffline($user->id);
+        try {
+            $presence->markOffline($user->id);
+        } catch (\Throwable $exception) {
+            // Account erasure must not depend on a healthy ephemeral presence cache.
+            report($exception);
+        }
         $photo = DB::table('profile_photos')->where('user_id', $user->id)->value('private_path');
         DB::transaction(function () use ($user): void {
             $user->tokens()->delete();

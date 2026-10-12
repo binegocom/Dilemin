@@ -43,7 +43,12 @@ final class SessionController extends Controller
             'Sign out from the current device using Logout.');
         $session->delete();
         if ($request->user()->online_visible) {
-            $presence->markOffline($request->user()->id, (string) $session->getKey());
+            try {
+                $presence->markOffline($request->user()->id, (string) $session->getKey());
+            } catch (\Throwable $exception) {
+                // Revocation remains effective even when Redis presence is unavailable.
+                report($exception);
+            }
         }
         return response()->json(['status' => 'revoked']);
     }
@@ -57,8 +62,13 @@ final class SessionController extends Controller
             'Current session is not a personal access token.');
         $count = $request->user()->tokens()->whereKeyNot($current->getKey())->delete();
         if ($count > 0 && $request->user()->online_visible) {
-            $presence->markOffline($request->user()->id);
-            $presence->markOnline($request->user()->id, (string) $current->getKey());
+            try {
+                $presence->markOffline($request->user()->id);
+                $presence->markOnline($request->user()->id, (string) $current->getKey());
+            } catch (\Throwable $exception) {
+                // Expiring Redis presence cannot undo a database token revocation.
+                report($exception);
+            }
         }
         return response()->json(['status' => 'revoked', 'count' => $count]);
     }
