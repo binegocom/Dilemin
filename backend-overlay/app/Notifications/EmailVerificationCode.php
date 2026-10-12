@@ -10,7 +10,7 @@ final class EmailVerificationCode extends Notification
 {
     use Queueable;
 
-    public function __construct(private readonly string $code, private readonly string $locale) {}
+    public function __construct(private readonly string $code, private readonly string $emailLocale) {}
 
     public function via(object $notifiable): array
     {
@@ -29,7 +29,7 @@ final class EmailVerificationCode extends Notification
             'en' => ['Dılêmın – Verify your email', 'Your verification code is:',
                 'The code expires in 10 minutes. Do not share it with anyone.'],
         ];
-        [$subject, $heading, $warning] = $translations[$this->locale] ?? $translations['en'];
+        [$subject, $heading, $warning] = $translations[$this->emailLocale] ?? $translations['en'];
         return (new MailMessage)->subject($subject)->line($heading)
             ->line($this->code)->line($warning);
     }
