@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../core/api_client.dart';
 import '../../core/models.dart';
+import 'message_timeline.dart';
 import '../../core/realtime_subscription.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui/palette.dart';
@@ -33,9 +34,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   bool _active = true;
   bool _refreshing = false;
   final _compose = TextEditingController();
+  final _scroll = ScrollController();
   List<ChatMessage> _messages = const [];
   bool _loading = true;
   bool _sending = false;
+  bool _loadingOlder = false;
+  bool _olderFailed = false;
+  bool _hasOlder = false;
   bool _failed = false;
   String? _pendingClientId;
   String? _pendingBody;
@@ -45,6 +50,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _scroll.addListener(_onScroll);
     _refresh();
     _realtime = RealtimeSubscription(
       api: widget.api,
@@ -72,7 +78,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _refreshing = true;
     try {
       final data = await widget.api.messages(widget.conversationId);
-      if (mounted) setState(() { _messages = data; _loading = false; _failed = false; });
+      if (mounted) setState(() {
+        if (_loading) _hasOlder = data.length == 50;
+        _messages = mergeMessagePages(_messages, data);
+        _loading = false;
+        _failed = false;
+      });
       if (mounted && _active && data.isNotEmpty && data.first.id != _lastReadId) {
         try {
           await widget.api.markMessagesRead(widget.conversationId, data.first.id);
@@ -82,8 +93,40 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         }
       }
     } catch (_) {
-      if (mounted) setState(() { _loading = false; _failed = true; });
+      if (mounted) setState(() { _loading = false; _failed = _messages.isEmpty; });
     } finally { _refreshing = false; }
+  }
+
+  void _onScroll() {
+    if (!_scroll.hasClients || _loadingOlder || !_hasOlder || !_active) return;
+    final position = _scroll.position;
+    if (position.pixels >= position.maxScrollExtent - 160) {
+      _loadOlder();
+    }
+  }
+
+  Future<void> _loadOlder() async {
+    if (_loadingOlder || !_hasOlder || _messages.isEmpty || !_active) return;
+    setState(() {
+      _loadingOlder = true;
+      _olderFailed = false;
+    });
+    try {
+      final older = await widget.api.messages(
+        widget.conversationId,
+        beforeId: _messages.last.id,
+      );
+      if (!mounted) return;
+      setState(() {
+        _messages = mergeMessagePages(_messages, older);
+        _hasOlder = older.length == 50;
+        _olderFailed = false;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _olderFailed = true);
+    } finally {
+      if (mounted) setState(() => _loadingOlder = false);
+    }
   }
 
   Future<void> _send() async {
@@ -110,7 +153,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   @override
-  void dispose() { _realtime?.dispose(); _poll?.cancel(); WidgetsBinding.instance.removeObserver(this); _compose.dispose(); super.dispose(); }
+  void dispose() { _realtime?.dispose(); _poll?.cancel(); WidgetsBinding.instance.removeObserver(this); _scroll.dispose(); _compose.dispose(); super.dispose(); }
 
   @override
   Widget build(BuildContext context) {
@@ -127,10 +170,25 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           : RefreshIndicator(
               onRefresh: _refresh,
               child: ListView.builder(
+                controller: _scroll,
                 reverse: true,
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 18),
-                itemCount: _messages.length,
+                itemCount: _messages.length + (_hasOlder ? 1 : 0),
                 itemBuilder: (context, index) {
+                  if (index == _messages.length) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: _loadingOlder
+                          ? const CircularProgressIndicator.adaptive()
+                          : TextButton(
+                              onPressed: _loadOlder,
+                              child: Text(_olderFailed
+                                ? l10n.retry : l10n.loadEarlierMessages),
+                            ),
+                      ),
+                    );
+                  }
                   final message = _messages[index];
                   final mine = message.senderId == widget.sessionUserId;
                   return Align(
