@@ -10,6 +10,8 @@ import '../photos/profile_photo_screen.dart';
 import '../moderation/moderation_screen.dart';
 import '../moderation/report_review_screen.dart';
 import '../safety/blocked_people_screen.dart';
+import '../security/device_sessions_screen.dart';
+import '../security/data_export_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({
@@ -134,6 +136,22 @@ class _AccountScreenState extends State<AccountScreen> {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
               builder: (_) => BlockedPeopleScreen(api: widget.api))),
+          ),
+          const Divider(height: 1),
+          ListTile(
+            leading: const Icon(Icons.devices_outlined),
+            title: Text(l10n.activeSessions),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: _busy ? null : () => Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => DeviceSessionsScreen(api: widget.api))),
+          ),
+          const Divider(height: 1),
+          ListTile(
+            leading: const Icon(Icons.file_download_outlined),
+            title: Text(l10n.exportData),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: _busy ? null : () => Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => DataExportScreen(api: widget.api))),
           ),
           if (widget.user.isModerator) ...[
             const Divider(height: 1),

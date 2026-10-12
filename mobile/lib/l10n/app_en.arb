@@ -106,5 +106,16 @@
   "newPassword": "New password",
   "resetPassword": "Reset password",
   "passwordResetSuccess": "Password changed. Sign in with the new password.",
-  "passwordResetFailed": "Reset failed. Check the code or request another one."
+  "passwordResetFailed": "Reset failed. Check the code or request another one.",
+  "activeSessions": "Active sessions",
+  "currentSession": "This device",
+  "lastUsed": "Last used",
+  "sessionExpires": "Expires",
+  "revokeSession": "Revoke session",
+  "revokeOtherSessions": "Sign out other devices",
+  "revokeSessionConfirmation": "Access on the affected devices will be revoked. Continue?",
+  "sessionPrivacyNote": "Manage signed-in devices. To end the current session, use Sign out.",
+  "exportData": "Export my data",
+  "exportPrivacyNote": "Download a JSON file containing your account data, messages and profile photo. Confirm with your password and keep the file in a safe place.",
+  "exportFailed": "Export failed. Check your password, connection and available storage."
 }

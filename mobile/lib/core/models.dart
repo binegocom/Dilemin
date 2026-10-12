@@ -115,3 +115,31 @@ class PendingReport {
     details: json['details'] as String?,
   );
 }
+
+
+class DeviceSession {
+  const DeviceSession({
+    required this.id,
+    required this.name,
+    required this.current,
+    this.createdAt,
+    this.lastUsedAt,
+    this.expiresAt,
+  });
+
+  final String id;
+  final String name;
+  final bool current;
+  final DateTime? createdAt;
+  final DateTime? lastUsedAt;
+  final DateTime? expiresAt;
+
+  factory DeviceSession.fromJson(Map<String, dynamic> json) => DeviceSession(
+    id: json['id'].toString(),
+    name: json['name'] as String,
+    current: json['current'] == true,
+    createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
+    lastUsedAt: DateTime.tryParse(json['last_used_at'] as String? ?? ''),
+    expiresAt: DateTime.tryParse(json['expires_at'] as String? ?? ''),
+  );
+}

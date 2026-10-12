@@ -106,5 +106,16 @@
   "newPassword": "Neues Passwort",
   "resetPassword": "Passwort zurücksetzen",
   "passwordResetSuccess": "Passwort geändert. Melde dich mit dem neuen Passwort an.",
-  "passwordResetFailed": "Zurücksetzen fehlgeschlagen. Prüfe den Code oder fordere einen neuen an."
+  "passwordResetFailed": "Zurücksetzen fehlgeschlagen. Prüfe den Code oder fordere einen neuen an.",
+  "activeSessions": "Aktive Sitzungen",
+  "currentSession": "Dieses Gerät",
+  "lastUsed": "Zuletzt verwendet",
+  "sessionExpires": "Gültig bis",
+  "revokeSession": "Sitzung beenden",
+  "revokeOtherSessions": "Andere Geräte abmelden",
+  "revokeSessionConfirmation": "Der Zugriff auf den betroffenen Geräten wird beendet. Fortfahren?",
+  "sessionPrivacyNote": "Verwalte deine angemeldeten Geräte. Die aktuelle Sitzung kannst du über Abmelden beenden.",
+  "exportData": "Meine Daten exportieren",
+  "exportPrivacyNote": "Lade eine JSON-Datei mit deinen Kontodaten, Nachrichten und deinem Profilfoto herunter. Gib zur Bestätigung dein Passwort ein. Speichere die Datei an einem sicheren Ort.",
+  "exportFailed": "Datenexport fehlgeschlagen. Prüfe dein Passwort, deine Verbindung und den Speicherplatz."
 }

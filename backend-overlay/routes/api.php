@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BlockController;
 use App\Http\Controllers\Api\V1\ConversationController;
 use App\Http\Controllers\Api\V1\DiscoveryController;
+use App\Http\Controllers\Api\V1\DataExportController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\MessageController;
 use App\Http\Controllers\Api\V1\PresenceController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Api\V1\ModerationController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\ReportReviewController;
 use App\Http\Controllers\Api\V1\SafetyController;
+use App\Http\Controllers\Api\V1\SessionController;
 use App\Http\Controllers\Api\V1\VisibilityController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +29,11 @@ Route::prefix('v1')->group(function (): void {
     Route::middleware(['auth:sanctum', 'throttle:dilemin-api'])->group(function (): void {
         Route::get('/auth/me', [AuthController::class, 'me']);
         Route::post('/auth/logout', [AuthController::class, 'logout']);
+        Route::get('/auth/sessions', [SessionController::class, 'index']);
+        Route::delete('/auth/sessions/{token}', [SessionController::class, 'destroy'])
+            ->whereNumber('token')->middleware('throttle:dilemin-sensitive');
+        Route::post('/auth/sessions/revoke-others', [SessionController::class, 'revokeOthers'])
+            ->middleware('throttle:dilemin-sensitive');
         Route::post('/auth/email/request', [EmailVerificationController::class, 'requestCode'])
             ->middleware('throttle:dilemin-verification-request');
         Route::post('/auth/email/confirm', [EmailVerificationController::class, 'confirm'])
@@ -45,6 +52,7 @@ Route::prefix('v1')->group(function (): void {
         Route::patch('/account/profile', [ProfileController::class, 'update']);
         Route::patch('/account/visibility', [VisibilityController::class, 'update']);
         Route::delete('/account', [SafetyController::class, 'deleteAccount'])->middleware('throttle:dilemin-sensitive');
+        Route::post('/account/export', [DataExportController::class, 'download'])->middleware('throttle:dilemin-export');
         Route::get('/account/blocked', [BlockController::class, 'index']);
         Route::get('/moderation/reports', [ReportReviewController::class, 'index']);
         Route::post('/moderation/reports/{report}/review', [ReportReviewController::class, 'review'])

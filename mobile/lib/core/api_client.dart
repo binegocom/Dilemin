@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
@@ -239,6 +240,46 @@ class ApiClient {
       'revision': photo.revision,
       'decision': approved ? 'approved' : 'rejected',
     });
+  }
+
+  Future<List<DeviceSession>> deviceSessions() async {
+    final response = await _send('GET', '/api/v1/auth/sessions');
+    return (response['data'] as List<dynamic>)
+        .map((value) => DeviceSession.fromJson(value as Map<String, dynamic>))
+        .toList(growable: false);
+  }
+
+  Future<void> revokeSession(String sessionId) async {
+    await _send('DELETE', '/api/v1/auth/sessions/${Uri.encodeComponent(sessionId)}');
+  }
+
+  Future<int> revokeOtherSessions(String password) async {
+    final response = await _send('POST', '/api/v1/auth/sessions/revoke-others',
+        body: {'password': password});
+    return response['count'] as int;
+  }
+
+  // Stream the export to a temporary file instead of buffering private messages in memory.
+  Future<void> exportAccount(String password, File destination) async {
+    final request = http.Request('POST', AppConfig.baseUri.resolve('/api/v1/account/export'));
+    request.headers['Accept'] = 'application/json';
+    request.headers['Content-Type'] = 'application/json';
+    if (token != null) request.headers['Authorization'] = 'Bearer $token';
+    request.body = jsonEncode({'password': password});
+    final response = await _client.send(request).timeout(const Duration(seconds: 30));
+    if (response.statusCode != 200) {
+      await response.stream.drain<void>();
+      throw ApiException(response.statusCode);
+    }
+    final sink = destination.openWrite();
+    try {
+      await for (final chunk in response.stream.timeout(const Duration(seconds: 30))) {
+        sink.add(chunk);
+      }
+      await sink.flush();
+    } finally {
+      await sink.close();
+    }
   }
 
   Future<void> logout() async { await _send('POST', '/api/v1/auth/logout'); }

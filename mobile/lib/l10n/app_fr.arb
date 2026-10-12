@@ -106,5 +106,16 @@
   "newPassword": "Nouveau mot de passe",
   "resetPassword": "Réinitialiser le mot de passe",
   "passwordResetSuccess": "Mot de passe modifié. Connectez-vous avec le nouveau mot de passe.",
-  "passwordResetFailed": "Échec de la réinitialisation. Vérifiez le code ou demandez-en un autre."
+  "passwordResetFailed": "Échec de la réinitialisation. Vérifiez le code ou demandez-en un autre.",
+  "activeSessions": "Sessions actives",
+  "currentSession": "Cet appareil",
+  "lastUsed": "Dernière utilisation",
+  "sessionExpires": "Expire le",
+  "revokeSession": "Révoquer la session",
+  "revokeOtherSessions": "Déconnecter les autres appareils",
+  "revokeSessionConfirmation": "Les appareils concernés perdront leur accès. Continuer ?",
+  "sessionPrivacyNote": "Gérez les appareils connectés. Pour fermer la session actuelle, utilisez Déconnexion.",
+  "exportData": "Exporter mes données",
+  "exportPrivacyNote": "Téléchargez un fichier JSON contenant vos données, messages et photo de profil. Confirmez avec votre mot de passe et conservez le fichier en lieu sûr.",
+  "exportFailed": "Échec de l’export. Vérifiez le mot de passe, la connexion et l’espace de stockage."
 }

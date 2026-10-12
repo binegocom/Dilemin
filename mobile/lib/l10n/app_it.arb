@@ -106,5 +106,16 @@
   "newPassword": "Nuova password",
   "resetPassword": "Reimposta password",
   "passwordResetSuccess": "Password modificata. Accedi con la nuova password.",
-  "passwordResetFailed": "Reimpostazione non riuscita. Controlla il codice o richiedine un altro."
+  "passwordResetFailed": "Reimpostazione non riuscita. Controlla il codice o richiedine un altro.",
+  "activeSessions": "Sessioni attive",
+  "currentSession": "Questo dispositivo",
+  "lastUsed": "Ultimo utilizzo",
+  "sessionExpires": "Scade il",
+  "revokeSession": "Revoca sessione",
+  "revokeOtherSessions": "Disconnetti gli altri dispositivi",
+  "revokeSessionConfirmation": "L’accesso dai dispositivi selezionati verrà interrotto. Continuare?",
+  "sessionPrivacyNote": "Gestisci i dispositivi connessi. Per terminare la sessione attuale usa Esci.",
+  "exportData": "Esporta i miei dati",
+  "exportPrivacyNote": "Scarica un file JSON con i dati del tuo account, i messaggi e la foto del profilo. Conferma con la password e conserva il file al sicuro.",
+  "exportFailed": "Esportazione non riuscita. Controlla password, connessione e spazio disponibile."
 }
