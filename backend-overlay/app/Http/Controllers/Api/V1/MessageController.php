@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Support\SocialAccess;
 use App\Events\ConversationMessageCreated;
+use App\Jobs\SendMessagePush;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -86,6 +87,7 @@ class MessageController extends Controller
         abort_unless($saved && $saved->conversation_id === $conversation && $saved->body === $data['body'], 409);
         if ($inserted) {
             DB::table('conversations')->where('id', $conversation)->update(['updated_at' => now()]);
+            SendMessagePush::dispatch((int) $saved->id)->onQueue('push')->afterCommit();
             ConversationMessageCreated::dispatch(
                 (int) $saved->id,
                 $conversation,

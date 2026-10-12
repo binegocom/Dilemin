@@ -15,6 +15,9 @@ fi
 if [[ ! -d "$ROOT/backend/vendor/laravel/reverb" ]]; then
   (cd "$ROOT/backend" && composer require laravel/reverb --no-interaction)
 fi
+if [[ ! -d "$ROOT/backend/vendor/kreait/firebase-php" ]]; then
+  (cd "$ROOT/backend" && composer require "kreait/firebase-php:^8.0" --no-interaction)
+fi
 python3 "$ROOT/scripts/register_laravel_api.py" "$ROOT/backend/bootstrap/app.php"
 cp -R "$ROOT/backend-overlay/." "$ROOT/backend/"
 

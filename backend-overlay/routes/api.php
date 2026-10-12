@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\DataExportController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\MessageController;
 use App\Http\Controllers\Api\V1\PresenceController;
+use App\Http\Controllers\Api\V1\PushDeviceController;
 use App\Http\Controllers\Api\V1\PasswordRecoveryController;
 use App\Http\Controllers\Api\V1\PhotoController;
 use App\Http\Controllers\Api\V1\ModerationController;
@@ -42,6 +43,8 @@ Route::prefix('v1')->group(function (): void {
         Route::post('/presence/heartbeat', [PresenceController::class, 'heartbeat']);
         Route::post('/presence/offline', [PresenceController::class, 'offline']);
         Route::get('/discovery/online', [DiscoveryController::class, 'online']);
+        Route::put('/push/devices', [PushDeviceController::class, 'store'])->middleware('throttle:dilemin-sensitive');
+        Route::delete('/push/devices', [PushDeviceController::class, 'destroy'])->middleware('throttle:dilemin-sensitive');
         Route::post('/account/photo', [PhotoController::class, 'store'])->middleware('throttle:dilemin-sensitive');
         Route::delete('/account/photo', [PhotoController::class, 'destroy'])->middleware('throttle:dilemin-sensitive');
         Route::get('/users/{user}/photo', [PhotoController::class, 'show']);

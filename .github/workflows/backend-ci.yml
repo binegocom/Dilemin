@@ -32,7 +32,7 @@ jobs:
         run: composer create-project laravel/laravel backend '^12.0' --no-interaction --no-progress
       - name: Add Sanctum
         working-directory: backend
-        run: composer require laravel/sanctum laravel/reverb --no-interaction --no-progress
+        run: composer require laravel/sanctum laravel/reverb "kreait/firebase-php:^8.0" --no-interaction --no-progress
       - name: Register API and overlay
         run: |
           python3 scripts/register_laravel_api.py backend/bootstrap/app.php
