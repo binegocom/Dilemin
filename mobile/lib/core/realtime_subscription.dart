@@ -25,14 +25,32 @@ class RealtimeSubscription {
   Timer? _retry;
   bool _closed = false;
   bool _connecting = false;
+  bool _paused = false;
 
   void start() {
-    if (_socketHost.isEmpty || _appKey.isEmpty) return;
-    _connect();
+    if (_socketHost.isEmpty || _appKey.isEmpty || _closed || _paused) return;
+    if (_socket == null) _connect();
+  }
+
+  void pause() {
+    if (_closed || _paused) return;
+    _paused = true;
+    _retry?.cancel();
+    _retry = null;
+    _events?.cancel();
+    _events = null;
+    _socket?.close();
+    _socket = null;
+  }
+
+  void resume() {
+    if (_closed || !_paused) return;
+    _paused = false;
+    start();
   }
 
   Future<void> _connect() async {
-    if (_closed || _connecting) return;
+    if (_closed || _paused || _connecting || _socket != null) return;
     _connecting = true;
     try {
       final base = Uri.parse(_socketHost);
@@ -49,7 +67,7 @@ class RealtimeSubscription {
       );
       final socket = await WebSocket.connect(uri.toString())
           .timeout(const Duration(seconds: 10));
-      if (_closed) {
+      if (_closed || _paused) {
         await socket.close();
         return;
       }
@@ -72,6 +90,7 @@ class RealtimeSubscription {
       final packet = jsonDecode(raw.toString());
       if (packet is! Map<String, dynamic>) return;
       final event = packet['event'];
+      if (_closed || _paused) return;
       if (event == 'pusher:connection_established') {
         final data = packet['data'] is String
             ? jsonDecode(packet['data'] as String)
@@ -81,12 +100,17 @@ class RealtimeSubscription {
           socketId: data['socket_id'] as String,
           channelName: 'private-$channel',
         );
-        if (_closed || _socket?.readyState != WebSocket.open) return;
+        if (_closed || _paused || _socket?.readyState != WebSocket.open) return;
         _socket?.add(jsonEncode({
           'event': 'pusher:subscribe',
           'data': {'channel': 'private-$channel', 'auth': signature},
         }));
-      } else if (event == 'message.created') {
+      } else if (event == 'pusher:ping') {
+        if (_socket?.readyState == WebSocket.open) {
+          _socket?.add(jsonEncode({'event': 'pusher:pong', 'data': {}}));
+        }
+      } else if (event == 'pusher_internal:subscription_succeeded' ||
+          event == 'message.created') {
         onMessageCreated();
       } else if (event == 'pusher:error' || event == 'pusher:subscription_error') {
         _reconnect();
@@ -105,7 +129,7 @@ class RealtimeSubscription {
   }
 
   void _scheduleReconnect() {
-    if (_closed || _retry != null) return;
+    if (_closed || _paused || _retry != null) return;
     _retry = Timer(const Duration(seconds: 15), () {
       _retry = null;
       _connect();
@@ -113,11 +137,8 @@ class RealtimeSubscription {
   }
 
   void dispose() {
+    if (_closed) return;
+    pause();
     _closed = true;
-    _retry?.cancel();
-    _retry = null;
-    _events?.cancel();
-    _socket?.close();
-    _socket = null;
   }
 }

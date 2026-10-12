@@ -50,8 +50,19 @@ class _HomeShellState extends State<HomeShell> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
-      _push.start(deviceLocale);
+      if (widget.user.pushMessagesEnabled) _push.start(deviceLocale);
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeShell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!oldWidget.user.pushMessagesEnabled && widget.user.pushMessagesEnabled) {
+      final locale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+      _push.start(locale);
+    } else if (oldWidget.user.pushMessagesEnabled && !widget.user.pushMessagesEnabled) {
+      _push.unregister();
+    }
   }
 
   Future<void> _openPushConversation(String conversationId) async {

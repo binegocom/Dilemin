@@ -53,7 +53,12 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _active = state == AppLifecycleState.resumed;
-    if (_active) _refresh();
+    if (_active) {
+      _realtime?.resume();
+      _refresh();
+    } else {
+      _realtime?.pause();
+    }
   }
 
   @override

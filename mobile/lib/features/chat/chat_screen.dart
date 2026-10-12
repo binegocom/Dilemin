@@ -59,7 +59,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _active = state == AppLifecycleState.resumed;
-    if (_active) _refresh();
+    if (_active) {
+      _realtime?.resume();
+      _refresh();
+    } else {
+      _realtime?.pause();
+    }
   }
 
   Future<void> _refresh() async {
