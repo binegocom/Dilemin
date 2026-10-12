@@ -158,3 +158,21 @@ class DeviceSession {
     expiresAt: DateTime.tryParse(json['expires_at'] as String? ?? ''),
   );
 }
+
+class SuspendedProfile {
+  const SuspendedProfile({
+    required this.id,
+    required this.name,
+    required this.suspendedAt,
+  });
+
+  final String id;
+  final String name;
+  final DateTime? suspendedAt;
+
+  factory SuspendedProfile.fromJson(Map<String, dynamic> json) => SuspendedProfile(
+    id: json['id'].toString(),
+    name: json['display_name'] as String,
+    suspendedAt: DateTime.tryParse(json['suspended_at'] as String? ?? ''),
+  );
+}

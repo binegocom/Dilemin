@@ -133,5 +133,10 @@
   "accountSuspendedHint": "Dein Konto ist derzeit von Radar, Profilsuche und Chats ausgeschlossen. Du kannst deine Daten exportieren, dein Konto löschen oder dich abmelden.",
   "suspendAccount": "Konto sperren",
   "suspendAccountConfirmation": "Diese Person kann nach der Sperrung keine Profile entdecken oder Nachrichten senden. Gib einen überprüfbaren Grund an.",
-  "suspensionReason": "Begründung"
+  "suspensionReason": "Begründung",
+  "suspendedAccounts": "Gesperrte Konten",
+  "noSuspendedAccounts": "Keine gesperrten Konten.",
+  "restoreAccount": "Konto entsperren",
+  "restoreAccountConfirmation": "Die Sperre wird aufgehoben. Das Profil bleibt zunächst unsichtbar.",
+  "restoreReason": "Grund der Entsperrung"
 }

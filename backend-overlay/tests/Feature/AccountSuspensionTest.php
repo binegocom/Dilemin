@@ -49,6 +49,12 @@ final class AccountSuspensionTest extends TestCase
             'id' => $target->id, 'online_visible' => false,
         ]);
         $this->assertNotNull(DB::table('users')->where('id', $target->id)->value('suspended_at'));
+        $this->getJson('/api/v1/moderation/suspended')
+            ->assertOk()->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', (string) $target->id);
+        $this->actingAs($reporter, 'sanctum')
+            ->getJson('/api/v1/moderation/suspended')->assertForbidden();
+        $this->actingAs($moderator, 'sanctum');
         $this->assertDatabaseHas('moderation_actions', [
             'moderator_id' => $moderator->id,
             'target_user_id' => $target->id,
@@ -101,6 +107,8 @@ final class AccountSuspensionTest extends TestCase
             'id' => $target->id, 'suspended_at' => null,
             'online_visible' => false,
         ]);
+        $this->getJson('/api/v1/moderation/suspended')
+            ->assertOk()->assertJsonCount(0, 'data');
         $this->assertDatabaseHas('moderation_actions', [
             'action' => 'restored', 'target_user_id' => $target->id,
             'moderator_id' => $moderator->id,

@@ -133,5 +133,10 @@
   "accountSuspendedHint": "Votre accès au radar, à la découverte de profils et aux discussions est suspendu. Vous pouvez exporter vos données, supprimer votre compte ou vous déconnecter.",
   "suspendAccount": "Suspendre le compte",
   "suspendAccountConfirmation": "Cette personne ne pourra plus découvrir des profils ni envoyer de messages. Saisissez un motif vérifiable.",
-  "suspensionReason": "Motif"
+  "suspensionReason": "Motif",
+  "suspendedAccounts": "Comptes suspendus",
+  "noSuspendedAccounts": "Aucun compte suspendu.",
+  "restoreAccount": "Rétablir le compte",
+  "restoreAccountConfirmation": "La suspension sera levée. Le profil restera invisible jusqu'à sa réactivation.",
+  "restoreReason": "Motif du rétablissement"
 }

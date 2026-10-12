@@ -93,6 +93,23 @@ class ReportReviewController extends Controller
         return response()->json(['status' => $data['decision']]);
     }
 
+    public function suspended(Request $request): JsonResponse
+    {
+        $this->authorizeModerator($request);
+        $rows = DB::table('users')
+            ->whereNotNull('suspended_at')
+            ->where('is_moderator', false)
+            ->orderByDesc('suspended_at')
+            ->limit(100)
+            ->get(['id', 'name', 'suspended_at']);
+
+        return response()->json(['data' => $rows->map(fn ($row): array => [
+            'id' => (string) $row->id,
+            'display_name' => $row->name,
+            'suspended_at' => $row->suspended_at,
+        ])]);
+    }
+
     public function restore(Request $request, User $user): JsonResponse
     {
         $this->authorizeModerator($request);

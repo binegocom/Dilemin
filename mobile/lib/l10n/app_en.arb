@@ -133,5 +133,10 @@
   "accountSuspendedHint": "Access to radar, profile discovery, and chats is suspended. You can still export your data, delete your account, or sign out.",
   "suspendAccount": "Suspend account",
   "suspendAccountConfirmation": "This person will no longer be able to discover profiles or send messages. Enter a documented reason.",
-  "suspensionReason": "Reason"
+  "suspensionReason": "Reason",
+  "suspendedAccounts": "Suspended accounts",
+  "noSuspendedAccounts": "No suspended accounts.",
+  "restoreAccount": "Restore account",
+  "restoreAccountConfirmation": "The suspension will be removed. The profile will remain hidden until visibility is enabled again.",
+  "restoreReason": "Restoration reason"
 }

@@ -65,6 +65,7 @@ Route::prefix('v1')->group(function (): void {
         Route::post('/account/export', [DataExportController::class, 'download'])->middleware('throttle:dilemin-export');
         Route::get('/account/blocked', [BlockController::class, 'index']);
         Route::get('/moderation/reports', [ReportReviewController::class, 'index']);
+        Route::get('/moderation/suspended', [ReportReviewController::class, 'suspended']);
         Route::post('/moderation/reports/{report}/review', [ReportReviewController::class, 'review'])
             ->whereNumber('report')->middleware('throttle:dilemin-sensitive');
         Route::post('/moderation/users/{user}/restore', [ReportReviewController::class, 'restore'])

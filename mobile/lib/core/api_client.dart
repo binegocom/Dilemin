@@ -207,6 +207,21 @@ class ApiClient {
         .toList(growable: false);
   }
 
+  Future<List<SuspendedProfile>> suspendedProfiles() async {
+    final json = await _send('GET', '/api/v1/moderation/suspended');
+    return (json['data'] as List<dynamic>)
+        .map((value) => SuspendedProfile.fromJson(value as Map<String, dynamic>))
+        .toList(growable: false);
+  }
+
+  Future<void> restoreSuspendedProfile(String id, String reason) async {
+    await _send(
+      'POST',
+      '/api/v1/moderation/users/${Uri.encodeComponent(id)}/restore',
+      body: {'reason': reason},
+    );
+  }
+
   Future<void> suspendReportedAccount(String id, String note) async {
     await _send('POST',
       '/api/v1/moderation/reports/${Uri.encodeComponent(id)}/review',
