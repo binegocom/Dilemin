@@ -38,7 +38,7 @@ class ReportReviewController extends Controller
         ])]);
     }
 
-    public function review(Request $request, int $report, PresenceStore $presence): JsonResponse
+    public function review(Request $request, int $report): JsonResponse
     {
         $this->authorizeModerator($request);
         $data = $request->validate([
@@ -83,7 +83,7 @@ class ReportReviewController extends Controller
         });
         if ($targetId !== null) {
             try {
-                $presence->markOffline($targetId);
+                app(PresenceStore::class)->markOffline($targetId);
             } catch (\Throwable $exception) {
                 // The database suspension immediately blocks discovery and
                 // messaging; cached presence also expires automatically.
