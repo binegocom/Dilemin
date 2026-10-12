@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Support\SocialAccess;
+use App\Events\ConversationMessageCreated;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,7 +62,7 @@ class MessageController extends Controller
 
     public function store(Request $request, int $conversation): JsonResponse
     {
-        $this->authorizedConversation($request, $conversation);
+        $authorized = $this->authorizedConversation($request, $conversation);
         $data = $request->validate([
             'body' => ['required', 'string', 'max:2000'],
             'client_id' => ['required', 'uuid'],
@@ -83,7 +84,16 @@ class MessageController extends Controller
         $saved = DB::table('messages')->where('sender_id', $senderId)
             ->where('client_id', $data['client_id'])->first();
         abort_unless($saved && $saved->conversation_id === $conversation && $saved->body === $data['body'], 409);
-        if ($inserted) DB::table('conversations')->where('id', $conversation)->update(['updated_at' => now()]);
+        if ($inserted) {
+            DB::table('conversations')->where('id', $conversation)->update(['updated_at' => now()]);
+            ConversationMessageCreated::dispatch(
+                (int) $saved->id,
+                $conversation,
+                (int) $senderId,
+                (int) ($senderId === $authorized->user_low_id
+                    ? $authorized->user_high_id : $authorized->user_low_id)
+            );
+        }
         return response()->json(['id' => (string) $saved->id], $inserted ? 201 : 200);
     }
 }
