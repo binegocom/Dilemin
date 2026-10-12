@@ -23,3 +23,9 @@
 
 # Local Laravel skeleton is generated from versioned backend-overlay source.
 /backend/
+
+# Firebase native configuration and server credentials
+**/google-services.json
+**/GoogleService-Info.plist
+**/*firebase-adminsdk*.json
+**/firebase-service-account*.json

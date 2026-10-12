@@ -29,6 +29,8 @@ class LogoutResilienceTest extends TestCase
         $this->postJson('/api/v1/auth/logout')->assertOk();
         $this->assertDatabaseCount('personal_access_tokens', 0);
         $this->assertDatabaseCount('push_devices', 0);
+        // Simulate the auth manager of a subsequent HTTP request.
+        app('auth')->forgetGuards();
         $this->getJson('/api/v1/auth/me')->assertUnauthorized();
     }
 }

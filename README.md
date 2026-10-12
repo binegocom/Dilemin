@@ -82,7 +82,7 @@ Social endpoints enforce authenticated identity, blocked-user checks, conversati
 
 - Automated spam detection, moderator escalation and operational enforcement (report triage is now available), identity/age assurance where required
 - Deploy and operate human photo moderation with documented staff identity onboarding and an audit trail
-- Realtime push/WebSocket message and presence delivery (currently foreground polling: 5–25 seconds)
+- Reverb/FCM source is implemented; production WSS/APNs credentials, real-device testing, monitoring and deployment are still required
 - Push notifications and configurable preferences; verify native export/share behavior on real devices
 - Deployment provisioning, backups, secrets management and incident response
 - Store policy audit, real-device Android/iOS build and performance gates (CI now includes native debug and simulator builds)
@@ -90,3 +90,7 @@ Social endpoints enforce authenticated identity, blocked-user checks, conversati
 Do not treat this milestone as a production release until these controls are implemented and verified.
 
 More details: [Account security, data export and presence](docs/ACCOUNT_SECURITY.md).
+
+## Realtime and notifications
+
+Realtime and push infrastructure integration is documented in [Realtime and push setup](docs/REALTIME_PUSH.md). Mobile broadcast subscriptions fall back to polling when the WSS gateway is absent. Do not commit Firebase or APNs credentials.
