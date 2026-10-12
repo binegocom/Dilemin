@@ -127,5 +127,6 @@
     }
   },
   "messageNotifications": "Nachrichtenbenachrichtigungen",
-  "messageNotificationsHint": "Erhalte Hinweise zu neuen privaten Nachrichten."
+  "messageNotificationsHint": "Erhalte Hinweise zu neuen privaten Nachrichten.",
+  "loadEarlierMessages": "Ältere Nachrichten laden"
 }

@@ -127,5 +127,6 @@
     }
   },
   "messageNotifications": "Message notifications",
-  "messageNotificationsHint": "Receive alerts for new private messages."
+  "messageNotificationsHint": "Receive alerts for new private messages.",
+  "loadEarlierMessages": "Load earlier messages"
 }

@@ -127,5 +127,6 @@
     }
   },
   "messageNotifications": "Notifiche dei messaggi",
-  "messageNotificationsHint": "Ricevi avvisi per i nuovi messaggi privati."
+  "messageNotificationsHint": "Ricevi avvisi per i nuovi messaggi privati.",
+  "loadEarlierMessages": "Carica i messaggi precedenti"
 }
