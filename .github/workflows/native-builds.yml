@@ -1,0 +1,64 @@
+name: Native Mobile Builds
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mobile/**'
+      - 'scripts/fetch_rive_assets.sh'
+      - '.github/workflows/native-builds.yml'
+  pull_request:
+    paths:
+      - 'mobile/**'
+      - 'scripts/fetch_rive_assets.sh'
+      - '.github/workflows/native-builds.yml'
+
+concurrency:
+  group: native-builds-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Install verified animation assets
+        run: bash scripts/fetch_rive_assets.sh
+      - name: Generate Android project files
+        working-directory: mobile
+        run: flutter create --platforms=android --project-name=dilemin --org=app.dilemin .
+      - name: Resolve packages
+        working-directory: mobile
+        run: flutter pub get
+      - name: Build Android debug APK
+        working-directory: mobile
+        run: flutter build apk --debug
+
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Install verified animation assets
+        run: bash scripts/fetch_rive_assets.sh
+      - name: Generate iOS project files
+        working-directory: mobile
+        run: flutter create --platforms=ios --project-name=dilemin --org=app.dilemin .
+      - name: Resolve packages
+        working-directory: mobile
+        run: flutter pub get
+      - name: Build iOS Simulator app (unsigned)
+        working-directory: mobile
+        run: flutter build ios --simulator --debug
