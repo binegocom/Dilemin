@@ -128,5 +128,10 @@
   },
   "messageNotifications": "Notifiche dei messaggi",
   "messageNotificationsHint": "Ricevi avvisi per i nuovi messaggi privati.",
-  "loadEarlierMessages": "Carica i messaggi precedenti"
+  "loadEarlierMessages": "Carica i messaggi precedenti",
+  "accountSuspendedTitle": "Account temporaneamente sospeso",
+  "accountSuspendedHint": "L'accesso al radar, alla scoperta dei profili e alle chat è sospeso. Puoi esportare i tuoi dati, eliminare l'account o disconnetterti.",
+  "suspendAccount": "Sospendi account",
+  "suspendAccountConfirmation": "Questa persona non potrà più scoprire profili o inviare messaggi. Inserisci un motivo verificabile.",
+  "suspensionReason": "Motivazione"
 }

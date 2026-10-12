@@ -128,5 +128,10 @@
   },
   "messageNotifications": "Notifications des messages",
   "messageNotificationsHint": "Recevez des alertes pour les nouveaux messages privés.",
-  "loadEarlierMessages": "Charger les messages précédents"
+  "loadEarlierMessages": "Charger les messages précédents",
+  "accountSuspendedTitle": "Compte temporairement suspendu",
+  "accountSuspendedHint": "Votre accès au radar, à la découverte de profils et aux discussions est suspendu. Vous pouvez exporter vos données, supprimer votre compte ou vous déconnecter.",
+  "suspendAccount": "Suspendre le compte",
+  "suspendAccountConfirmation": "Cette personne ne pourra plus découvrir des profils ni envoyer de messages. Saisissez un motif vérifiable.",
+  "suspensionReason": "Motif"
 }

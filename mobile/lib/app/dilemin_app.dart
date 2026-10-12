@@ -8,6 +8,7 @@ import '../core/models.dart';
 import '../features/auth/auth_screen.dart';
 import '../features/auth/email_verification_screen.dart';
 import '../features/shell/home_shell.dart';
+import '../features/security/suspended_account_screen.dart';
 import '../l10n/app_localizations.dart';
 
 class DileminApp extends StatefulWidget {
@@ -135,7 +136,9 @@ class _DileminAppState extends State<DileminApp> {
                 })
               : _user == null
                   ? AuthScreen(api: _api, onAuthenticated: _signedIn)
-                  : !_user!.emailVerified
+                  : _user!.suspended
+                    ? SuspendedAccountScreen(api: _api, onSignOut: _signedOut)
+                    : !_user!.emailVerified
                     ? EmailVerificationScreen(api: _api,
                         onVerified: (user) => setState(() => _user = user),
                         onSignOut: _signedOut)

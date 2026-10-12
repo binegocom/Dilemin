@@ -128,5 +128,10 @@
   },
   "messageNotifications": "Message notifications",
   "messageNotificationsHint": "Receive alerts for new private messages.",
-  "loadEarlierMessages": "Load earlier messages"
+  "loadEarlierMessages": "Load earlier messages",
+  "accountSuspendedTitle": "Account temporarily suspended",
+  "accountSuspendedHint": "Access to radar, profile discovery, and chats is suspended. You can still export your data, delete your account, or sign out.",
+  "suspendAccount": "Suspend account",
+  "suspendAccountConfirmation": "This person will no longer be able to discover profiles or send messages. Enter a documented reason.",
+  "suspensionReason": "Reason"
 }

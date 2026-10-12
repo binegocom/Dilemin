@@ -207,6 +207,13 @@ class ApiClient {
         .toList(growable: false);
   }
 
+  Future<void> suspendReportedAccount(String id, String note) async {
+    await _send('POST',
+      '/api/v1/moderation/reports/${Uri.encodeComponent(id)}/review',
+      body: {'decision': 'suspended', 'note': note},
+    );
+  }
+
   Future<void> reviewReport(String id, bool dismissed) async {
     await _send('POST', '/api/v1/moderation/reports/${Uri.encodeComponent(id)}/review', body: {
       'decision': dismissed ? 'dismissed' : 'reviewed',

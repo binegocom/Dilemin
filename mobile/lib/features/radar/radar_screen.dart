@@ -67,6 +67,17 @@ class _RadarScreenState extends State<RadarScreen> with WidgetsBindingObserver {
       if (error.statusCode == 401) {
         _timer?.cancel();
         await widget.onSessionExpired();
+      } else if (error.statusCode == 403) {
+        try {
+          final current = await widget.api.me();
+          if (current.suspended) {
+            widget.onUserChanged(current);
+            return;
+          }
+        } catch (_) {
+          // The existing error state remains available when /me is unreachable.
+        }
+        if (mounted) setState(() { _failed = true; _loading = false; });
       } else if (mounted) {
         setState(() { _failed = true; _loading = false; });
       }

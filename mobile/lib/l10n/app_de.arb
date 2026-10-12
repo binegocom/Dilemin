@@ -128,5 +128,10 @@
   },
   "messageNotifications": "Nachrichtenbenachrichtigungen",
   "messageNotificationsHint": "Erhalte Hinweise zu neuen privaten Nachrichten.",
-  "loadEarlierMessages": "Ältere Nachrichten laden"
+  "loadEarlierMessages": "Ältere Nachrichten laden",
+  "accountSuspendedTitle": "Konto vorübergehend gesperrt",
+  "accountSuspendedHint": "Dein Konto ist derzeit von Radar, Profilsuche und Chats ausgeschlossen. Du kannst deine Daten exportieren, dein Konto löschen oder dich abmelden.",
+  "suspendAccount": "Konto sperren",
+  "suspendAccountConfirmation": "Diese Person kann nach der Sperrung keine Profile entdecken oder Nachrichten senden. Gib einen überprüfbaren Grund an.",
+  "suspensionReason": "Begründung"
 }

@@ -44,6 +44,60 @@ class _ReportReviewScreenState extends State<ReportReviewScreen> {
     }
   }
 
+  Future<void> _suspend(PendingReport report) async {
+    if (_busyId != null || report.reportedName == null) return;
+    final l10n = AppLocalizations.of(context)!;
+    final controller = TextEditingController();
+    final approved = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, updateDialog) => AlertDialog(
+          title: Text(l10n.suspendAccount),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(l10n.suspendAccountConfirmation),
+              const SizedBox(height: 16),
+              TextField(
+                controller: controller,
+                maxLength: 500,
+                maxLines: 3,
+                decoration: InputDecoration(labelText: l10n.suspensionReason),
+                onChanged: (_) => updateDialog(() {}),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text(l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: controller.text.trim().length < 3
+                ? null : () => Navigator.pop(dialogContext, true),
+              child: Text(l10n.suspendAccount),
+            ),
+          ],
+        ),
+      ),
+    );
+    final note = controller.text.trim();
+    controller.dispose();
+    if (approved != true || !mounted || note.length < 3) return;
+    setState(() => _busyId = report.id);
+    try {
+      await widget.api.suspendReportedAccount(report.id, note);
+      await _refresh();
+    } catch (_) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.reviewFailed)),
+      );
+      await _refresh();
+    } finally {
+      if (mounted) setState(() => _busyId = null);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
@@ -73,6 +127,17 @@ class _ReportReviewScreenState extends State<ReportReviewScreen> {
                   Expanded(child: FilledButton(onPressed: _busyId == null
                     ? () => _review(report, false) : null, child: Text(t.markReviewed))),
                 ]),
+                if (report.reportedName != null) ...[
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _busyId == null ? () => _suspend(report) : null,
+                      icon: const Icon(Icons.gpp_bad_outlined),
+                      label: Text(t.suspendAccount),
+                    ),
+                  ),
+                ],
               ])));
           }),
     );
