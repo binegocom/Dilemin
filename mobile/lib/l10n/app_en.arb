@@ -80,5 +80,12 @@
   "noPendingPhotos": "No photos waiting for review.",
   "reviewFailed": "Photo changed or review failed. Refresh and try again.",
   "approvePhoto": "Approve",
-  "rejectPhoto": "Reject"
+  "rejectPhoto": "Reject",
+  "emailVerificationTitle": "Verify your email",
+  "emailVerificationHint": "Confirm your email address to appear online and message other members.",
+  "sendVerificationCode": "Send verification code",
+  "verificationCodeSent": "A six-digit code was sent to your email address. It expires in 10 minutes.",
+  "verificationCode": "Verification code",
+  "verifyEmail": "Verify email",
+  "verificationFailed": "Verification failed. Check the code, email delivery and resend limit."
 }

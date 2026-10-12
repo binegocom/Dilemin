@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import '../core/api_client.dart';
 import '../core/models.dart';
 import '../features/auth/auth_screen.dart';
+import '../features/auth/email_verification_screen.dart';
 import '../features/shell/home_shell.dart';
 import '../l10n/app_localizations.dart';
 
@@ -134,7 +135,11 @@ class _DileminAppState extends State<DileminApp> {
                 })
               : _user == null
                   ? AuthScreen(api: _api, onAuthenticated: _signedIn)
-                  : HomeShell(
+                  : !_user!.emailVerified
+                    ? EmailVerificationScreen(api: _api,
+                        onVerified: (user) => setState(() => _user = user),
+                        onSignOut: _signedOut)
+                    : HomeShell(
                       api: _api,
                       user: _user!,
                       onUserChanged: (user) => setState(() => _user = user),

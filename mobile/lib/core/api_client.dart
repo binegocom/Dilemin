@@ -147,6 +147,15 @@ class ApiClient {
   }
 
 
+  Future<void> requestEmailVerificationCode(String locale) async {
+    await _send('POST', '/api/v1/auth/email/request', body: {'locale': locale});
+  }
+
+  Future<SessionUser> verifyEmailCode(String code) async {
+    final data = await _send('POST', '/api/v1/auth/email/confirm', body: {'code': code});
+    return SessionUser.fromJson(data['user'] as Map<String, dynamic>);
+  }
+
   Future<SessionUser> uploadPhoto(XFile file) async {
     final request = http.MultipartRequest('POST', AppConfig.baseUri.resolve('/api/v1/account/photo'));
     request.headers['Accept'] = 'application/json';

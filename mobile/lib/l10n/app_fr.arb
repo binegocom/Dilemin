@@ -80,5 +80,12 @@
   "noPendingPhotos": "Aucune photo en attente.",
   "reviewFailed": "La photo a changé ou la vérification a échoué. Actualisez et réessayez.",
   "approvePhoto": "Approuver",
-  "rejectPhoto": "Refuser"
+  "rejectPhoto": "Refuser",
+  "emailVerificationTitle": "Vérifier votre adresse e-mail",
+  "emailVerificationHint": "Vérifiez votre adresse e-mail pour apparaître en ligne et envoyer des messages.",
+  "sendVerificationCode": "Envoyer un code",
+  "verificationCodeSent": "Un code à six chiffres a été envoyé à votre adresse e-mail. Il expire dans 10 minutes.",
+  "verificationCode": "Code de vérification",
+  "verifyEmail": "Vérifier mon e-mail",
+  "verificationFailed": "Échec de la vérification. Vérifiez le code, la réception et la limite d’envoi."
 }

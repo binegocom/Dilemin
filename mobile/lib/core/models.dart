@@ -7,6 +7,7 @@ class SessionUser {
     this.photoId,
     this.photoStatus,
     this.isModerator = false,
+    this.emailVerified = false,
   });
 
   final String id;
@@ -16,6 +17,7 @@ class SessionUser {
   final String? photoId;
   final String? photoStatus;
   final bool isModerator;
+  final bool emailVerified;
 
   factory SessionUser.fromJson(Map<String, dynamic> json) => SessionUser(
         id: json['id'].toString(),
@@ -25,6 +27,7 @@ class SessionUser {
         photoId: json['photo_id']?.toString(),
         photoStatus: json['photo_status'] as String?,
         isModerator: json['is_moderator'] == true,
+        emailVerified: json['email_verified'] == true,
       );
 }
 

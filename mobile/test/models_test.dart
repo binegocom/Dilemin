@@ -21,6 +21,7 @@ void main() {
     expect(owner.photoId, '10');
     expect(owner.photoStatus, 'pending');
     expect(owner.isModerator, isTrue);
+    expect(owner.emailVerified, isFalse);
     final public = OnlinePerson.fromJson(const {'id': 2, 'display_name': 'B', 'photo_id': null});
     expect(public.photoId, isNull);
   });

@@ -80,5 +80,12 @@
   "noPendingPhotos": "Nessuna foto in attesa di revisione.",
   "reviewFailed": "La foto è cambiata o la revisione non è riuscita. Aggiorna e riprova.",
   "approvePhoto": "Approva",
-  "rejectPhoto": "Rifiuta"
+  "rejectPhoto": "Rifiuta",
+  "emailVerificationTitle": "Verifica il tuo indirizzo email",
+  "emailVerificationHint": "Verifica la tua email per apparire online e inviare messaggi.",
+  "sendVerificationCode": "Invia codice",
+  "verificationCodeSent": "Un codice a sei cifre è stato inviato alla tua email. Scade tra 10 minuti.",
+  "verificationCode": "Codice di verifica",
+  "verifyEmail": "Verifica email",
+  "verificationFailed": "Verifica non riuscita. Controlla il codice, la ricezione e il limite di invio."
 }

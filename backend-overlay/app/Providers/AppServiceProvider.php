@@ -21,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
             Limit::perMinute(120)->by((string) ($request->user()?->id ?? $request->ip())));
         RateLimiter::for('dilemin-sensitive', fn (Request $request) =>
             Limit::perMinute(15)->by((string) ($request->user()?->id ?? $request->ip())));
+        RateLimiter::for('dilemin-verification-request', fn (Request $request) =>
+            Limit::perHour(5)->by((string) ($request->user()?->id ?? $request->ip())));
+        RateLimiter::for('dilemin-verification-confirm', fn (Request $request) =>
+            Limit::perMinute(10)->by((string) ($request->user()?->id ?? $request->ip())));
         RateLimiter::for('dilemin-messages', fn (Request $request) =>
             Limit::perMinute(25)->by((string) ($request->user()?->id ?? $request->ip())));
     }

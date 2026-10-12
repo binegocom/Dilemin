@@ -80,5 +80,12 @@
   "noPendingPhotos": "Keine Fotos zur Prüfung vorhanden.",
   "reviewFailed": "Das Foto wurde geändert oder die Prüfung ist fehlgeschlagen. Bitte aktualisieren.",
   "approvePhoto": "Freigeben",
-  "rejectPhoto": "Ablehnen"
+  "rejectPhoto": "Ablehnen",
+  "emailVerificationTitle": "E-Mail bestätigen",
+  "emailVerificationHint": "Bestätige deine E-Mail-Adresse, um online sichtbar zu sein und Nachrichten zu senden.",
+  "sendVerificationCode": "Bestätigungscode senden",
+  "verificationCodeSent": "Ein sechsstelliger Code wurde an deine E-Mail-Adresse gesendet. Er ist 10 Minuten gültig.",
+  "verificationCode": "Bestätigungscode",
+  "verifyEmail": "E-Mail bestätigen",
+  "verificationFailed": "Bestätigung fehlgeschlagen. Prüfe den Code, deine E-Mails und das Sendelimit."
 }

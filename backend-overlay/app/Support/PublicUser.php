@@ -14,7 +14,8 @@ final class PublicUser
             'bio' => $user->bio,
             'online_visible' => (bool) $user->online_visible,
             ...ProfilePhoto::forUser($user, $owner),
-            ...($owner ? ['is_moderator' => (bool) $user->is_moderator] : []),
+            ...($owner ? ['is_moderator' => (bool) $user->is_moderator,
+                'email_verified' => $user->hasVerifiedEmail()] : []),
         ];
     }
 }

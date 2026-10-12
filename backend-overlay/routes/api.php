@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BlockController;
 use App\Http\Controllers\Api\V1\ConversationController;
 use App\Http\Controllers\Api\V1\DiscoveryController;
+use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\MessageController;
 use App\Http\Controllers\Api\V1\PresenceController;
 use App\Http\Controllers\Api\V1\PhotoController;
@@ -20,6 +21,11 @@ Route::prefix('v1')->group(function (): void {
     Route::middleware(['auth:sanctum', 'throttle:dilemin-api'])->group(function (): void {
         Route::get('/auth/me', [AuthController::class, 'me']);
         Route::post('/auth/logout', [AuthController::class, 'logout']);
+        Route::post('/auth/email/request', [EmailVerificationController::class, 'requestCode'])
+            ->middleware('throttle:dilemin-verification-request');
+        Route::post('/auth/email/confirm', [EmailVerificationController::class, 'confirm'])
+            ->middleware('throttle:dilemin-verification-confirm');
+        Route::middleware('verified')->group(function (): void {
         Route::post('/presence/heartbeat', [PresenceController::class, 'heartbeat']);
         Route::post('/presence/offline', [PresenceController::class, 'offline']);
         Route::get('/discovery/online', [DiscoveryController::class, 'online']);
@@ -40,5 +46,6 @@ Route::prefix('v1')->group(function (): void {
         Route::post('/conversations', [ConversationController::class, 'store'])->middleware('throttle:dilemin-sensitive');
         Route::get('/conversations/{conversation}/messages', [MessageController::class, 'index'])->whereNumber('conversation');
         Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware('throttle:dilemin-messages')->whereNumber('conversation');
+        });
     });
 });
