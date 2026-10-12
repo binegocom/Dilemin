@@ -16,7 +16,9 @@ class VisibilityController extends Controller
         $user = $request->user();
         $user->forceFill(['online_visible' => $data['online_visible']])->save();
         if ($user->online_visible) {
-            $presence->markOnline($user->id);
+            $sessionId = PresenceStore::sessionId($request);
+            if ($sessionId === null) $presence->markOnline($user->id);
+            else $presence->markOnline($user->id, $sessionId);
         } else {
             $presence->markOffline($user->id);
         }

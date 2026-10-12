@@ -23,3 +23,9 @@ The export is a versioned snapshot and is not a continuous backup. API rate limi
 - CI Flutter analysis, backend tests, real-device iOS/Android builds and security review must pass on this commit.
 - OS push notifications, realtime events, age assurance, location permissions, moderation operations and data retention/deletion policies need completion before release.
 - Don't store authentication tokens or secrets in a public repository.
+
+## Device-scoped online status
+
+Authenticated heartbeats use the current Sanctum personal access token ID as the Redis presence member. Going offline on one device removes only that session; another live token keeps the account online. Hiding the account, deleting it, and resetting its password remove all session members. Individual session revocation updates presence for currently visible accounts.
+
+The global presence index contains user IDs, never raw bearer tokens. Redis TTL is 75 seconds. A crashed device can remain visible for up to 75 seconds. This is not a GPS proximity signal.

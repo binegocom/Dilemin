@@ -67,7 +67,9 @@ class AuthController extends Controller
 
     public function logout(Request $request, PresenceStore $presence): JsonResponse
     {
-        $presence->markOffline($request->user()->id);
+        $sessionId = PresenceStore::sessionId($request);
+        if ($sessionId === null) $presence->markOffline($request->user()->id);
+        else $presence->markOffline($request->user()->id, $sessionId);
         $request->user()->currentAccessToken()?->delete();
         return response()->json(['status' => 'ok']);
     }

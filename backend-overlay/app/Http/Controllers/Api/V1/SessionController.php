@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Support\PresenceStore;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -31,7 +32,7 @@ final class SessionController extends Controller
         ])->all()]);
     }
 
-    public function destroy(Request $request, string $token): JsonResponse
+    public function destroy(Request $request, PresenceStore $presence, string $token): JsonResponse
     {
         // Both the query and the deletion must be scoped to the authenticated account.
         $session = $request->user()->tokens()->whereKey($token)->first();
@@ -41,10 +42,13 @@ final class SessionController extends Controller
             && (string) $current->getKey() === (string) $session->getKey(), 409,
             'Sign out from the current device using Logout.');
         $session->delete();
+        if ($request->user()->online_visible) {
+            $presence->markOffline($request->user()->id, (string) $session->getKey());
+        }
         return response()->json(['status' => 'revoked']);
     }
 
-    public function revokeOthers(Request $request): JsonResponse
+    public function revokeOthers(Request $request, PresenceStore $presence): JsonResponse
     {
         $data = $request->validate(['password' => ['required', 'string']]);
         abort_unless(Hash::check($data['password'], $request->user()->password), 422);
@@ -52,6 +56,10 @@ final class SessionController extends Controller
         abort_unless($current instanceof PersonalAccessToken, 409,
             'Current session is not a personal access token.');
         $count = $request->user()->tokens()->whereKeyNot($current->getKey())->delete();
+        if ($count > 0 && $request->user()->online_visible) {
+            $presence->markOffline($request->user()->id);
+            $presence->markOnline($request->user()->id, (string) $current->getKey());
+        }
         return response()->json(['status' => 'revoked', 'count' => $count]);
     }
 }
