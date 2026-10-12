@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 
 import '../../core/models.dart';
+import '../../core/api_client.dart';
+import '../photos/private_avatar.dart';
 import '../animations/radar_glow.dart';
 import '../animations/radar_particles.dart';
 
@@ -20,9 +22,20 @@ Offset markerPosition(String userId, Size size) {
 }
 
 class RadarCanvas extends StatefulWidget {
-  const RadarCanvas({required this.people, required this.centerName, this.onPersonTap, super.key});
+  const RadarCanvas({
+    required this.people,
+    required this.centerName,
+    this.api,
+    this.centerUserId,
+    this.centerPhotoId,
+    this.onPersonTap,
+    super.key,
+  });
   final List<OnlinePerson> people;
   final String centerName;
+  final ApiClient? api;
+  final String? centerUserId;
+  final String? centerPhotoId;
   final ValueChanged<OnlinePerson>? onPersonTap;
 
   @override
@@ -77,8 +90,12 @@ class _RadarCanvasState extends State<RadarCanvas> with SingleTickerProviderStat
               ),
             for (final person in people)
               _avatar(person: person, position: markerPosition(person.id, size), size: 48),
-            _avatar(person: OnlinePerson(id: 'me', name: widget.centerName),
-                position: Offset(side / 2, side / 2), size: 68, center: true),
+            _avatar(person: OnlinePerson(
+                id: widget.centerUserId ?? 'me',
+                name: widget.centerName,
+                photoId: widget.centerPhotoId,
+              ),
+              position: Offset(side / 2, side / 2), size: 68, center: true),
           ],
         );
       }),
@@ -104,8 +121,20 @@ class _RadarCanvasState extends State<RadarCanvas> with SingleTickerProviderStat
             boxShadow: [BoxShadow(color: const Color(0xFFFF4B86).withValues(alpha: center ? .34 : .14),
               blurRadius: 20, spreadRadius: 3)],
           ),
-          child: Center(child: Text(label.isEmpty ? '•' : label.characters.first.toUpperCase(),
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: center ? 26 : 17))),
+          child: Center(
+            child: widget.api != null && person.photoId != null
+                ? PrivateAvatar(
+                    api: widget.api!,
+                    userId: person.id,
+                    name: person.name,
+                    photoId: person.photoId,
+                    size: size - 5,
+                    isOnline: false,
+                  )
+                : Text(label.isEmpty ? '•' : label.characters.first.toUpperCase(),
+                    style: TextStyle(fontWeight: FontWeight.bold,
+                      fontSize: center ? 26 : 17)),
+          ),
         )),
       ),
     );
