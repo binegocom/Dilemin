@@ -9,7 +9,7 @@ The repository provides integration source, not active cloud infrastructure. Pus
 - Set APP_KEY, QUEUE_CONNECTION=redis, BROADCAST_CONNECTION=reverb.
 - Provide REVERB_APP_ID, REVERB_APP_KEY (public in Flutter), REVERB_APP_SECRET (server-only), REVERB_SERVER_HOST, REVERB_SERVER_PORT, REVERB_HOST, REVERB_PORT, REVERB_SCHEME=https.
 - Run php artisan reverb:start with a process supervisor; independently run php artisan queue:work redis --queue=default,push --tries=3 --timeout=60 under a supervisor. Never run only synchronous queues in production.
-- Private channel authorization is a Sanctum-protected POST to /api/broadcasting/auth. Authorization rejects outsiders, unverified accounts, and blocked users. Do not publish conversations on public channels.
+- Private channel authorization is a Sanctum-protected POST to /api/v1/realtime/authorize. Authorization rejects outsiders, unverified accounts, and blocked users. Do not publish conversations on public channels.
 - Inspect the non-destructive migration plan before applying migrations in the correct database. Do not perform production resets.
 
 ## Firebase native setup

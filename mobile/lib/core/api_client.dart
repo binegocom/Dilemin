@@ -64,7 +64,7 @@ class ApiClient {
     required String socketId,
     required String channelName,
   }) async {
-    final response = await _send('POST', '/api/broadcasting/auth', body: {
+    final response = await _send('POST', '/api/v1/realtime/authorize', body: {
       'socket_id': socketId,
       'channel_name': channelName,
     });
