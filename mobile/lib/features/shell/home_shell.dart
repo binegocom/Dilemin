@@ -60,9 +60,10 @@ class _HomeShellState extends State<HomeShell> {
     if (!oldWidget.user.pushMessagesEnabled && widget.user.pushMessagesEnabled) {
       final locale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
       _push.start(locale);
-    } else if (oldWidget.user.pushMessagesEnabled && !widget.user.pushMessagesEnabled) {
-      _push.unregister();
     }
+    // Keep a registered token bound to the current session. The backend
+    // preference suppresses delivery and re-enabling must not require an
+    // unnecessary FCM token rotation.
   }
 
   Future<void> _openPushConversation(String conversationId) async {
