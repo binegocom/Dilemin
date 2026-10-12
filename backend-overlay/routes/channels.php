@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 Broadcast::channel('users.{userId}', function ($user, string $userId): bool {
     return (int) $user->id === (int) $userId && $user->hasVerifiedEmail();
-});
+}, ['guards' => ['sanctum']]);
 
 Broadcast::channel('conversations.{conversationId}', function ($user, string $conversationId): bool {
     if (! $user->hasVerifiedEmail()) return false;
@@ -15,4 +15,4 @@ Broadcast::channel('conversations.{conversationId}', function ($user, string $co
     if ((int) $user->id !== (int) $row->user_low_id
         && (int) $user->id !== (int) $row->user_high_id) return false;
     return ! SocialAccess::blocked((int) $row->user_low_id, (int) $row->user_high_id);
-});
+}, ['guards' => ['sanctum']]);

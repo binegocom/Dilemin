@@ -25,6 +25,7 @@ class BroadcastAuthorizationTest extends TestCase
     private function authorize(User $user, string $channel): \Illuminate\Testing\TestResponse
     {
         $this->withToken($user->createToken('realtime-test')->plainTextToken);
+        $this->getJson('/api/v1/auth/me')->assertOk();
         return $this->postJson('/api/broadcasting/auth', [
             'socket_id' => '123.456',
             'channel_name' => $channel,
