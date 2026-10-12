@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
 import '../../core/models.dart';
-import '../../ui/palette.dart';
 import '../../l10n/app_localizations.dart';
 import '../animations/lottie_online_pulse.dart';
 import '../animations/rive_presence_indicator.dart';

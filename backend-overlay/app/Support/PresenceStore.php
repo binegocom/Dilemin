@@ -4,7 +4,7 @@ namespace App\Support;
 
 use Illuminate\Support\Facades\Redis;
 
-final class PresenceStore
+class PresenceStore
 {
     private const KEY = 'dilemin:presence:online';
     private const TTL_SECONDS = 75;
