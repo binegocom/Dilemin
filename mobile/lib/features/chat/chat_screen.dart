@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../core/api_client.dart';
 import '../../core/models.dart';
+import '../../core/realtime_subscription.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui/palette.dart';
 
@@ -28,6 +29,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   Timer? _poll;
+  RealtimeSubscription? _realtime;
   bool _active = true;
   bool _refreshing = false;
   final _compose = TextEditingController();
@@ -44,6 +46,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _refresh();
+    _realtime = RealtimeSubscription(
+      api: widget.api,
+      channel: 'conversations.${widget.conversationId}',
+      onMessageCreated: _refresh,
+    )..start();
     _poll = Timer.periodic(const Duration(seconds: 5), (_) {
       if (_active && !_refreshing && !_sending) _refresh();
     });
@@ -98,7 +105,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   @override
-  void dispose() { _poll?.cancel(); WidgetsBinding.instance.removeObserver(this); _compose.dispose(); super.dispose(); }
+  void dispose() { _realtime?.dispose(); _poll?.cancel(); WidgetsBinding.instance.removeObserver(this); _compose.dispose(); super.dispose(); }
 
   @override
   Widget build(BuildContext context) {

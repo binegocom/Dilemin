@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/api_client.dart';
 import '../../core/models.dart';
+import '../../core/realtime_subscription.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui/palette.dart';
 
@@ -11,12 +12,14 @@ class ConversationsScreen extends StatefulWidget {
   const ConversationsScreen({
     required this.api,
     required this.revision,
+    required this.sessionUserId,
     required this.onConversationTap,
     super.key,
   });
 
   final ApiClient api;
   final int revision;
+  final String sessionUserId;
   final Future<void> Function(String id, String name) onConversationTap;
 
   @override
@@ -25,6 +28,7 @@ class ConversationsScreen extends StatefulWidget {
 
 class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsBindingObserver {
   Timer? _timer;
+  RealtimeSubscription? _realtime;
   bool _active = true;
   List<ConversationPreview> _conversations = const [];
   bool _loading = true;
@@ -36,6 +40,11 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _refresh();
+    _realtime = RealtimeSubscription(
+      api: widget.api,
+      channel: 'users.${widget.sessionUserId}',
+      onMessageCreated: _refresh,
+    )..start();
     _timer = Timer.periodic(const Duration(seconds: 12), (_) {
       if (_active) _refresh();
     });
@@ -66,7 +75,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
   }
 
   @override
-  void dispose() { _timer?.cancel(); WidgetsBinding.instance.removeObserver(this); _serial++; super.dispose(); }
+  void dispose() { _realtime?.dispose(); _timer?.cancel(); WidgetsBinding.instance.removeObserver(this); _serial++; super.dispose(); }
 
   @override
   Widget build(BuildContext context) {

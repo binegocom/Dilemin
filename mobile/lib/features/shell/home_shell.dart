@@ -81,6 +81,7 @@ class _HomeShellState extends State<HomeShell> {
         DirectoryScreen(api: widget.api, revision: _directoryRevision, onPersonTap: _openPerson),
         ConversationsScreen(
           api: widget.api, revision: _conversationsRevision,
+          sessionUserId: widget.user.id,
           onConversationTap: _openChat,
         ),
         AccountScreen(

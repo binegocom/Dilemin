@@ -44,6 +44,21 @@ class ApiClient {
     return decoded;
   }
 
+  Future<String> authorizeBroadcast({
+    required String socketId,
+    required String channelName,
+  }) async {
+    final response = await _send('POST', '/api/broadcasting/auth', body: {
+      'socket_id': socketId,
+      'channel_name': channelName,
+    });
+    final auth = response['auth'];
+    if (auth is! String || auth.isEmpty) {
+      throw const FormatException('Invalid broadcast authorization.');
+    }
+    return auth;
+  }
+
   Future<(String, SessionUser)> login(String email, String password) async {
     final json = await _send('POST', '/api/v1/auth/login', body: {
       'email': email,
