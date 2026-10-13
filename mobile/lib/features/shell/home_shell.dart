@@ -131,24 +131,24 @@ class _HomeShellState extends State<HomeShell> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: IndexedStack(index: _tab, children: [
-        RadarScreen(
+        TickerMode(enabled: _tab == 0, child: RadarScreen(
           api: widget.api, user: widget.user, active: _tab == 0,
           onUserChanged: widget.onUserChanged,
           onSignOut: _signOut,
           onSessionExpired: widget.onSessionExpired,
           onPersonTap: _openPerson,
-        ),
-        DirectoryScreen(api: widget.api, revision: _directoryRevision, onPersonTap: _openPerson),
-        ConversationsScreen(
+        )),
+        TickerMode(enabled: _tab == 1, child: DirectoryScreen(api: widget.api, revision: _directoryRevision, onPersonTap: _openPerson)),
+        TickerMode(enabled: _tab == 2, child: ConversationsScreen(
           api: widget.api, revision: _conversationsRevision,
           sessionUserId: widget.user.id,
           onConversationTap: _openChat,
-        ),
-        AccountScreen(
+        )),
+        TickerMode(enabled: _tab == 3, child: AccountScreen(
           api: widget.api, user: widget.user,
           onUserChanged: widget.onUserChanged,
           onSignOut: _signOut,
-        ),
+        )),
       ]),
       bottomNavigationBar: PremiumNavigationBar(
         selectedIndex: _tab,

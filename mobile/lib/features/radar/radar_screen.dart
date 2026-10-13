@@ -9,6 +9,7 @@ import '../animations/lottie_online_pulse.dart';
 import '../animations/rive_presence_indicator.dart';
 import '../directory/online_profile_card.dart';
 import '../../ui/palette.dart';
+import '../../ui/premium_state_panel.dart';
 import 'radar_canvas.dart';
 
 class RadarScreen extends StatefulWidget {
@@ -256,14 +257,19 @@ class _RadarScreenState extends State<RadarScreen> with WidgetsBindingObserver {
                     const Center(child: Padding(padding: EdgeInsets.all(36),
                       child: CircularProgressIndicator()))
                   else if (_failed)
-                    Center(child: Column(children: [
-                      Text(l10n.connectionError, textAlign: TextAlign.center),
-                      TextButton(onPressed: _tick, child: Text(l10n.retry)),
-                    ]))
+                    PremiumStatePanel(
+                      message: l10n.connectionError,
+                      icon: Icons.wifi_off_rounded,
+                      retryLabel: l10n.retry,
+                      onRetry: _tick,
+                      compact: true,
+                    )
                   else if (_people.isEmpty)
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 34),
-                      child: Text(l10n.emptyState, textAlign: TextAlign.center,
-                        style: const TextStyle(color: Color(0xFFB7B7CA))))
+                    PremiumStatePanel(
+                      message: l10n.emptyState,
+                      icon: Icons.radar_rounded,
+                      compact: true,
+                    )
                   else
                     LayoutBuilder(builder: (context, constraints) {
                       final columns = constraints.maxWidth >= 500 ? 4 : 3;

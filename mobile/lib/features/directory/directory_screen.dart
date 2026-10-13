@@ -6,6 +6,7 @@ import '../../core/api_client.dart';
 import '../../core/models.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui/palette.dart';
+import '../../ui/premium_state_panel.dart';
 import 'online_profile_card.dart';
 
 class DirectoryScreen extends StatefulWidget {
@@ -104,10 +105,20 @@ class _DirectoryScreenState extends State<DirectoryScreen> with WidgetsBindingOb
           ]),
         )),
         if (_busy) const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
-        else if (_failed) SliverFillRemaining(child: Center(child: TextButton(
-          onPressed: _refresh, child: Text(l10n.retry))))
-        else if (people.isEmpty) SliverFillRemaining(child: Center(child: Text(
-          l10n.emptyState, style: const TextStyle(color: Palette.secondary))))
+        else if (_failed) SliverFillRemaining(
+          child: PremiumStatePanel(
+            message: l10n.connectionError,
+            icon: Icons.wifi_off_rounded,
+            retryLabel: l10n.retry,
+            onRetry: _refresh,
+          ),
+        )
+        else if (people.isEmpty) SliverFillRemaining(
+          child: PremiumStatePanel(
+            message: l10n.emptyState,
+            icon: Icons.people_outline_rounded,
+          ),
+        )
         else SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           sliver: SliverLayoutBuilder(builder: (context, constraints) {

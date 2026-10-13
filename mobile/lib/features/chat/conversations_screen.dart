@@ -7,6 +7,7 @@ import '../../core/models.dart';
 import '../../core/realtime_subscription.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui/palette.dart';
+import '../../ui/premium_state_panel.dart';
 
 class ConversationsScreen extends StatefulWidget {
   const ConversationsScreen({
@@ -96,10 +97,20 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
           ]),
         )),
         if (_loading) const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
-        else if (_failed) SliverFillRemaining(child: Center(child: TextButton(
-          onPressed: _refresh, child: Text(l10n.retry))))
-        else if (_conversations.isEmpty) SliverFillRemaining(child: Center(child: Text(l10n.noChats,
-          style: const TextStyle(color: Palette.secondary))))
+        else if (_failed) SliverFillRemaining(
+          child: PremiumStatePanel(
+            message: l10n.connectionError,
+            icon: Icons.wifi_off_rounded,
+            retryLabel: l10n.retry,
+            onRetry: _refresh,
+          ),
+        )
+        else if (_conversations.isEmpty) SliverFillRemaining(
+          child: PremiumStatePanel(
+            message: l10n.noChats,
+            icon: Icons.forum_outlined,
+          ),
+        )
         else SliverList.builder(
           itemCount: _conversations.length,
           itemBuilder: (context, index) {
