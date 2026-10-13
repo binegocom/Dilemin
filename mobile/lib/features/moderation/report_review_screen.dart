@@ -47,7 +47,7 @@ class _ReportReviewScreenState extends State<ReportReviewScreen> {
   Future<void> _suspend(PendingReport report) async {
     if (_busyId != null || report.reportedName == null) return;
     final l10n = AppLocalizations.of(context)!;
-    final controller = TextEditingController();
+    var note = '';
     final approved = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
@@ -59,11 +59,10 @@ class _ReportReviewScreenState extends State<ReportReviewScreen> {
               Text(l10n.suspendAccountConfirmation),
               const SizedBox(height: 16),
               TextField(
-                controller: controller,
-                maxLength: 500,
+                                maxLength: 500,
                 maxLines: 3,
                 decoration: InputDecoration(labelText: l10n.suspensionReason),
-                onChanged: (_) => updateDialog(() {}),
+                onChanged: (value) { note = value; updateDialog(() {}); },
               ),
             ],
           ),
@@ -73,7 +72,7 @@ class _ReportReviewScreenState extends State<ReportReviewScreen> {
               child: Text(l10n.cancel),
             ),
             FilledButton(
-              onPressed: controller.text.trim().length < 3
+              onPressed: note.trim().length < 3
                 ? null : () => Navigator.pop(dialogContext, true),
               child: Text(l10n.suspendAccount),
             ),
@@ -81,12 +80,11 @@ class _ReportReviewScreenState extends State<ReportReviewScreen> {
         ),
       ),
     );
-    final note = controller.text.trim();
-    controller.dispose();
-    if (approved != true || !mounted || note.length < 3) return;
+    final submittedNote = note.trim();
+    if (approved != true || !mounted || submittedNote.length < 3) return;
     setState(() => _busyId = report.id);
     try {
-      await widget.api.suspendReportedAccount(report.id, note);
+      await widget.api.suspendReportedAccount(report.id, submittedNote);
       await _refresh();
     } catch (_) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(

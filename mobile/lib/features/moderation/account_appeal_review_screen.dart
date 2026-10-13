@@ -39,7 +39,7 @@ class _AccountAppealReviewScreenState extends State<AccountAppealReviewScreen> {
   Future<void> _review(PendingAppeal appeal, String decision) async {
     if (_processing != null) return;
     final t = AppLocalizations.of(context)!;
-    final controller = TextEditingController();
+    var reason = '';
     final confirm = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
@@ -52,12 +52,11 @@ class _AccountAppealReviewScreenState extends State<AccountAppealReviewScreen> {
             Text(appeal.statement),
             const SizedBox(height: 18),
             TextField(
-              controller: controller,
-              maxLength: 500,
+                            maxLength: 500,
               minLines: 2,
               maxLines: 4,
               decoration: InputDecoration(labelText: t.appealDecisionReason),
-              onChanged: (_) => rebuild(() {}),
+              onChanged: (value) { reason = value; rebuild(() {}); },
             ),
           ]),
           actions: [
@@ -66,7 +65,7 @@ class _AccountAppealReviewScreenState extends State<AccountAppealReviewScreen> {
               child: Text(t.cancel),
             ),
             FilledButton(
-              onPressed: controller.text.trim().length < 5
+              onPressed: reason.trim().length < 5
                   ? null : () => Navigator.pop(dialogContext, true),
               child: Text(decision == 'restored'
                   ? t.restoreFromAppeal : t.rejectAppeal),
@@ -75,13 +74,12 @@ class _AccountAppealReviewScreenState extends State<AccountAppealReviewScreen> {
         ),
       ),
     );
-    final reason = controller.text.trim();
-    controller.dispose();
-    if (confirm != true || !mounted || reason.length < 5) return;
+    final submittedReason = reason.trim();
+    if (confirm != true || !mounted || submittedReason.length < 5) return;
 
     setState(() => _processing = appeal.id);
     try {
-      await widget.api.reviewAccountAppeal(appeal.id, decision, reason);
+      await widget.api.reviewAccountAppeal(appeal.id, decision, submittedReason);
       await _refresh();
     } catch (_) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(

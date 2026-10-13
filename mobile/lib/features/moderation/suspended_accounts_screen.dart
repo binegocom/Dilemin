@@ -39,7 +39,7 @@ class _SuspendedAccountsScreenState extends State<SuspendedAccountsScreen> {
   Future<void> _restore(SuspendedProfile profile) async {
     if (_processing != null) return;
     final t = AppLocalizations.of(context)!;
-    final controller = TextEditingController();
+    var reason = '';
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
@@ -49,11 +49,10 @@ class _SuspendedAccountsScreenState extends State<SuspendedAccountsScreen> {
             Text(t.restoreAccountConfirmation),
             const SizedBox(height: 14),
             TextField(
-              controller: controller,
-              maxLength: 500,
+                            maxLength: 500,
               maxLines: 3,
               decoration: InputDecoration(labelText: t.restoreReason),
-              onChanged: (_) => rebuild(() {}),
+              onChanged: (value) { reason = value; rebuild(() {}); },
             ),
           ]),
           actions: [
@@ -62,7 +61,7 @@ class _SuspendedAccountsScreenState extends State<SuspendedAccountsScreen> {
               child: Text(t.cancel),
             ),
             FilledButton(
-              onPressed: controller.text.trim().length < 3
+              onPressed: reason.trim().length < 3
                 ? null : () => Navigator.pop(dialogContext, true),
               child: Text(t.restoreAccount),
             ),
@@ -70,12 +69,11 @@ class _SuspendedAccountsScreenState extends State<SuspendedAccountsScreen> {
         ),
       ),
     );
-    final reason = controller.text.trim();
-    controller.dispose();
-    if (confirmed != true || !mounted || reason.length < 3) return;
+    final submittedReason = reason.trim();
+    if (confirmed != true || !mounted || submittedReason.length < 3) return;
     setState(() => _processing = profile.id);
     try {
-      await widget.api.restoreSuspendedProfile(profile.id, reason);
+      await widget.api.restoreSuspendedProfile(profile.id, submittedReason);
       await _refresh();
     } catch (_) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(

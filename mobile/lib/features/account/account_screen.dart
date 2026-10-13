@@ -67,14 +67,14 @@ class _AccountScreenState extends State<AccountScreen> {
   Future<void> _deleteAccount() async {
     final l10n = AppLocalizations.of(context)!;
     final key = GlobalKey<FormState>();
-    final password = TextEditingController();
+    var password = '';
     final confirmed = await showDialog<bool>(context: context, builder: (dialogContext) => AlertDialog(
       title: Text(l10n.deleteAccount),
       content: Form(key: key, child: Column(mainAxisSize: MainAxisSize.min, children: [
         Text(l10n.deleteAccountWarning),
         const SizedBox(height: 18),
         TextFormField(
-          controller: password, obscureText: true, decoration: InputDecoration(labelText: l10n.password),
+          onChanged: (value) => password = value, obscureText: true, decoration: InputDecoration(labelText: l10n.password),
           validator: (value) => (value?.isNotEmpty ?? false) ? null : l10n.requiredFields,
         ),
       ])),
@@ -86,8 +86,7 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ],
     ));
-    final suppliedPassword = password.text;
-    password.dispose();
+    final suppliedPassword = password;
     if (confirmed != true || !mounted) return;
     setState(() => _busy = true);
     try {

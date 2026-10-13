@@ -29,7 +29,7 @@ class _SuspendedAccountScreenState extends State<SuspendedAccountScreen> {
   Future<void> _deleteAccount() async {
     if (_busy) return;
     final l10n = AppLocalizations.of(context)!;
-    final password = TextEditingController();
+    var password = '';
     final approved = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -40,7 +40,7 @@ class _SuspendedAccountScreenState extends State<SuspendedAccountScreen> {
             Text(l10n.deleteAccountWarning),
             const SizedBox(height: 16),
             TextField(
-              controller: password,
+              onChanged: (value) => password = value,
               obscureText: true,
               decoration: InputDecoration(labelText: l10n.password),
             ),
@@ -58,8 +58,7 @@ class _SuspendedAccountScreenState extends State<SuspendedAccountScreen> {
         ],
       ),
     );
-    final supplied = password.text;
-    password.dispose();
+    final supplied = password;
     if (approved != true || !mounted || supplied.isEmpty) return;
     setState(() => _busy = true);
     try {
