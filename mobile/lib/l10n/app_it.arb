@@ -138,5 +138,21 @@
   "noSuspendedAccounts": "Nessun account sospeso.",
   "restoreAccount": "Riattiva account",
   "restoreAccountConfirmation": "La sospensione sarà revocata. Il profilo rimarrà invisibile fino alla riattivazione.",
-  "restoreReason": "Motivo della riattivazione"
+  "restoreReason": "Motivo della riattivazione",
+  "appealTitle": "Presenta ricorso",
+  "appealHint": "Puoi richiedere una revisione motivata per ogni sospensione. Solo i moderatori possono leggere il messaggio.",
+  "appealStatement": "Motivazione del ricorso",
+  "appealSubmit": "Invia ricorso",
+  "appealStatusPending": "Il ricorso è in fase di revisione.",
+  "appealStatusRejected": "Il ricorso è stato respinto.",
+  "appealStatusRestored": "La sospensione è stata revocata.",
+  "appealDecisionNote": "Motivazione della decisione",
+  "appealSent": "Ricorso inviato.",
+  "appealReview": "Esamina ricorsi",
+  "noPendingAppeals": "Nessun ricorso in attesa.",
+  "restoreFromAppeal": "Revoca sospensione",
+  "rejectAppeal": "Respingi ricorso",
+  "appealDecisionReason": "Motivazione della decisione",
+  "checkAccountStatus": "Controlla lo stato dell'account",
+  "appealRequiredLength": "Inserisci almeno 20 caratteri."
 }

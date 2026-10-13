@@ -222,6 +222,36 @@ class ApiClient {
     );
   }
 
+  Future<AccountAppeal?> accountAppeal() async {
+    final json = await _send('GET', '/api/v1/account/appeal');
+    final appeal = json['appeal'];
+    return appeal == null
+        ? null
+        : AccountAppeal.fromJson(appeal as Map<String, dynamic>);
+  }
+
+  Future<void> submitAccountAppeal(String statement) async {
+    await _send('POST', '/api/v1/account/appeal', body: {
+      'statement': statement,
+    });
+  }
+
+  Future<List<PendingAppeal>> pendingAppeals() async {
+    final json = await _send('GET', '/api/v1/moderation/appeals');
+    return (json['data'] as List<dynamic>)
+        .map((value) => PendingAppeal.fromJson(value as Map<String, dynamic>))
+        .toList(growable: false);
+  }
+
+  Future<void> reviewAccountAppeal(
+    String appealId, String decision, String note,
+  ) async {
+    await _send('POST',
+      '/api/v1/moderation/appeals/${Uri.encodeComponent(appealId)}/review',
+      body: {'decision': decision, 'note': note},
+    );
+  }
+
   Future<void> suspendReportedAccount(String id, String note) async {
     await _send('POST',
       '/api/v1/moderation/reports/${Uri.encodeComponent(id)}/review',

@@ -138,5 +138,21 @@
   "noSuspendedAccounts": "Aucun compte suspendu.",
   "restoreAccount": "Rétablir le compte",
   "restoreAccountConfirmation": "La suspension sera levée. Le profil restera invisible jusqu'à sa réactivation.",
-  "restoreReason": "Motif du rétablissement"
+  "restoreReason": "Motif du rétablissement",
+  "appealTitle": "Contester la suspension",
+  "appealHint": "Vous pouvez demander une révision motivée une fois par suspension. Seule l'équipe de modération peut consulter votre message.",
+  "appealStatement": "Motif de votre recours",
+  "appealSubmit": "Envoyer le recours",
+  "appealStatusPending": "Votre recours est en cours d'examen.",
+  "appealStatusRejected": "Votre recours a été rejeté.",
+  "appealStatusRestored": "La suspension a été levée.",
+  "appealDecisionNote": "Motif de la décision",
+  "appealSent": "Recours envoyé.",
+  "appealReview": "Examiner les recours",
+  "noPendingAppeals": "Aucun recours en attente.",
+  "restoreFromAppeal": "Lever la suspension",
+  "rejectAppeal": "Rejeter le recours",
+  "appealDecisionReason": "Motif de la décision",
+  "checkAccountStatus": "Vérifier le statut du compte",
+  "appealRequiredLength": "Veuillez saisir au moins 20 caractères."
 }

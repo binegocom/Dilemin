@@ -138,5 +138,21 @@
   "noSuspendedAccounts": "No suspended accounts.",
   "restoreAccount": "Restore account",
   "restoreAccountConfirmation": "The suspension will be removed. The profile will remain hidden until visibility is enabled again.",
-  "restoreReason": "Restoration reason"
+  "restoreReason": "Restoration reason",
+  "appealTitle": "Appeal suspension",
+  "appealHint": "You can request one review per suspension. Only the moderation team can read your statement.",
+  "appealStatement": "Your appeal statement",
+  "appealSubmit": "Submit appeal",
+  "appealStatusPending": "Your appeal is under review.",
+  "appealStatusRejected": "Your appeal was declined.",
+  "appealStatusRestored": "Your suspension has been lifted.",
+  "appealDecisionNote": "Decision explanation",
+  "appealSent": "Your appeal was submitted.",
+  "appealReview": "Review appeals",
+  "noPendingAppeals": "No pending appeals.",
+  "restoreFromAppeal": "Restore access",
+  "rejectAppeal": "Reject appeal",
+  "appealDecisionReason": "Decision reason",
+  "checkAccountStatus": "Check account status",
+  "appealRequiredLength": "Please enter at least 20 characters."
 }

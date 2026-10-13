@@ -57,6 +57,11 @@ class _DileminAppState extends State<DileminApp> {
     if (mounted) setState(() => _user = user);
   }
 
+  Future<void> _checkSuspendedAccount() async {
+    final user = await _api.me();
+    if (mounted) setState(() => _user = user);
+  }
+
   Future<void> _signedOut() async {
     try {
       await _api.logout();
@@ -137,7 +142,8 @@ class _DileminAppState extends State<DileminApp> {
               : _user == null
                   ? AuthScreen(api: _api, onAuthenticated: _signedIn)
                   : _user!.suspended
-                    ? SuspendedAccountScreen(api: _api, onSignOut: _signedOut)
+                    ? SuspendedAccountScreen(api: _api, onSignOut: _signedOut,
+                        onCheckAccount: _checkSuspendedAccount)
                     : !_user!.emailVerified
                     ? EmailVerificationScreen(api: _api,
                         onVerified: (user) => setState(() => _user = user),

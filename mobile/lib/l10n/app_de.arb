@@ -138,5 +138,21 @@
   "noSuspendedAccounts": "Keine gesperrten Konten.",
   "restoreAccount": "Konto entsperren",
   "restoreAccountConfirmation": "Die Sperre wird aufgehoben. Das Profil bleibt zunächst unsichtbar.",
-  "restoreReason": "Grund der Entsperrung"
+  "restoreReason": "Grund der Entsperrung",
+  "appealTitle": "Sperre anfechten",
+  "appealHint": "Du kannst einmal pro Sperre eine begründete Überprüfung beantragen. Deine Nachricht ist nur für die Moderation sichtbar.",
+  "appealStatement": "Begründung deiner Beschwerde",
+  "appealSubmit": "Einspruch einreichen",
+  "appealStatusPending": "Dein Einspruch wird geprüft.",
+  "appealStatusRejected": "Dein Einspruch wurde abgelehnt.",
+  "appealStatusRestored": "Die Sperre wurde aufgehoben.",
+  "appealDecisionNote": "Entscheidungsbegründung",
+  "appealSent": "Einspruch erfolgreich eingereicht.",
+  "appealReview": "Einsprüche prüfen",
+  "noPendingAppeals": "Keine offenen Einsprüche.",
+  "restoreFromAppeal": "Sperre aufheben",
+  "rejectAppeal": "Einspruch ablehnen",
+  "appealDecisionReason": "Begründung der Entscheidung",
+  "checkAccountStatus": "Kontostatus prüfen",
+  "appealRequiredLength": "Bitte mindestens 20 Zeichen eingeben."
 }

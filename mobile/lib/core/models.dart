@@ -176,3 +176,45 @@ class SuspendedProfile {
     suspendedAt: DateTime.tryParse(json['suspended_at'] as String? ?? ''),
   );
 }
+
+class AccountAppeal {
+  const AccountAppeal({
+    required this.id,
+    required this.status,
+    required this.statement,
+    this.reviewNote,
+  });
+
+  final String id;
+  final String status;
+  final String statement;
+  final String? reviewNote;
+
+  factory AccountAppeal.fromJson(Map<String, dynamic> json) => AccountAppeal(
+    id: json['id'].toString(),
+    status: json['status'] as String,
+    statement: json['statement'] as String,
+    reviewNote: json['review_note'] as String?,
+  );
+}
+
+class PendingAppeal {
+  const PendingAppeal({
+    required this.id,
+    required this.userId,
+    required this.name,
+    required this.statement,
+  });
+
+  final String id;
+  final String userId;
+  final String name;
+  final String statement;
+
+  factory PendingAppeal.fromJson(Map<String, dynamic> json) => PendingAppeal(
+    id: json['id'].toString(),
+    userId: json['user_id'].toString(),
+    name: json['display_name'] as String,
+    statement: json['statement'] as String,
+  );
+}
