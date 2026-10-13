@@ -91,7 +91,7 @@ void main() {
     await tester.tap(find.text('Restore access').first);
     await tester.pumpAndSettle();
 
-    final submit = find.widgetWithText(FilledButton, 'Restore access');
+    final submit = find.widgetWithText(FilledButton, 'Restore access').last;
     expect(tester.widget<FilledButton>(submit).onPressed, isNull);
     await tester.enterText(find.byType(TextField), 'Reviewed evidence supports restoration.');
     await tester.pump();
