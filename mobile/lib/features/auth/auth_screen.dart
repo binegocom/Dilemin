@@ -4,6 +4,8 @@ import '../../core/api_client.dart';
 import '../../core/models.dart';
 import '../../l10n/app_localizations.dart';
 import 'password_recovery_screen.dart';
+import '../../ui/animated_heart_hero.dart';
+import '../../ui/palette.dart';
 
 typedef Authenticated = Future<void> Function(String token, SessionUser user);
 
@@ -76,10 +78,21 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final color = Theme.of(context).colorScheme.primary;
     return Scaffold(
-      body: SafeArea(
-        child: Center(
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF19152B),
+              Color(0xFF090B16),
+              Color(0xFF120D1F),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 440),
             child: SingleChildScrollView(
@@ -90,17 +103,36 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Icon(Icons.favorite_rounded, color: color, size: 56),
-                      const SizedBox(height: 12),
-                      Text('Dılêmın', textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
-                      const SizedBox(height: 12),
-                      Text(l10n.welcomeTitle, textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleLarge),
+                      const Center(child: AnimatedHeartHero()),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Dılêmın',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -1.8,
+                          color: Colors.white,
+                        ),
+                      ),
                       const SizedBox(height: 8),
-                      Text(l10n.welcomeSubtitle, textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white.withValues(alpha: .65))),
-                      const SizedBox(height: 32),
+                      Text(
+                        l10n.welcomeTitle,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          height: 1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        l10n.welcomeSubtitle,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Palette.secondary,
+                          height: 1.45,
+                        ),
+                      ),
+                      const SizedBox(height: 26),
                       if (_register) ...[
                         TextFormField(controller: _name, decoration: InputDecoration(labelText: l10n.displayName),
                             textCapitalization: TextCapitalization.words,
@@ -149,7 +181,20 @@ class _AuthScreenState extends State<AuthScreen> {
                       const SizedBox(height: 24),
                       FilledButton(
                         onPressed: _busy ? null : _submit,
-                        style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(54)),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size.fromHeight(56),
+                          backgroundColor: Palette.rose,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          elevation: 6,
+                          shadowColor: Palette.rose.withValues(alpha: .35),
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: .15,
+                          ),
+                        ),
                         child: _busy ? const SizedBox(width: 22, height: 22,
                           child: CircularProgressIndicator(strokeWidth: 2))
                           : Text(_register ? l10n.register : l10n.logIn),
@@ -174,6 +219,7 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

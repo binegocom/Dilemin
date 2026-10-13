@@ -48,7 +48,7 @@ class _RadarCanvasState extends State<RadarCanvas> with SingleTickerProviderStat
   final RadarParticleGame _particles = RadarParticleGame();
   late final AnimationController _controller = AnimationController(
     vsync: this,
-    duration: const Duration(seconds: 7),
+    duration: const Duration(seconds: 6),
   );
 
   @override
@@ -161,16 +161,30 @@ class _RadarPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.shortestSide * .47;
+    final radius = size.shortestSide * .45;
     final circle = Paint()..style = PaintingStyle.stroke;
     final glow = Paint()..shader = RadialGradient(
-      colors: [const Color(0xFFED3E82).withValues(alpha: .17), Colors.transparent],
+      colors: [
+        const Color(0xFFED3E82).withValues(alpha: .27),
+        const Color(0xFF884ED8).withValues(alpha: .12),
+        Colors.transparent,
+      ],
+      stops: const [0, .55, 1],
     ).createShader(Rect.fromCircle(center: center, radius: radius));
     canvas.drawCircle(center, radius, glow);
+    final pulse = (math.sin(progress * math.pi * 2) + 1) / 2;
+    canvas.drawCircle(
+      center,
+      radius * (.23 + pulse * .045),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.4
+        ..color = const Color(0xFFFFA1C5).withValues(alpha: .38 * (1 - pulse)),
+    );
     for (var index = 1; index <= 4; index++) {
       circle
         ..strokeWidth = index == 4 ? 1.3 : 1
-        ..color = const Color(0xFFB75893).withValues(alpha: index == 4 ? .38 : .20);
+        ..color = const Color(0xFFFF8CBA).withValues(alpha: index == 4 ? .55 : .26);
       canvas.drawCircle(center, radius * index / 4, circle);
     }
     final crosshair = Paint()..strokeWidth = 1
@@ -182,12 +196,37 @@ class _RadarPainter extends CustomPainter {
 
     final sweepPaint = Paint()..shader = SweepGradient(
       startAngle: 0, endAngle: math.pi * 2,
-      colors: [Colors.transparent, const Color(0xFFFF66A3).withValues(alpha: .02),
-        const Color(0xFFFF66A3).withValues(alpha: .20), Colors.transparent],
-      stops: const [0, .55, .94, 1],
+      colors: [
+        Colors.transparent,
+        const Color(0xFFFF66A3).withValues(alpha: .02),
+        const Color(0xFFFF66A3).withValues(alpha: .38),
+        const Color(0xFFFFC0D8).withValues(alpha: .12),
+        Colors.transparent,
+      ],
+      stops: const [0, .66, .90, .97, 1],
       transform: GradientRotation(progress * math.pi * 2),
     ).createShader(Rect.fromCircle(center: center, radius: radius));
     canvas.drawCircle(center, radius, sweepPaint);
+    final theta = progress * math.pi * 2 - math.pi / 2;
+    final start = Offset(
+      center.dx + math.cos(theta) * radius * .19,
+      center.dy + math.sin(theta) * radius * .19,
+    );
+    final end = Offset(
+      center.dx + math.cos(theta) * radius,
+      center.dy + math.sin(theta) * radius,
+    );
+    canvas.drawLine(
+      start, end,
+      Paint()
+        ..color = const Color(0xFFFFA6CC).withValues(alpha: .62)
+        ..strokeWidth = 2
+        ..strokeCap = StrokeCap.round,
+    );
+    canvas.drawCircle(
+      end, 3.4,
+      Paint()..color = const Color(0xFFFFDAE9),
+    );
   }
 
   @override
