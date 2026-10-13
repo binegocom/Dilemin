@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\AccountAppealController;
+use App\Http\Controllers\Api\V1\AppealReviewController;
 use App\Http\Middleware\EnsureAccountActive;
 use App\Http\Controllers\Api\V1\BlockController;
 use App\Http\Controllers\Api\V1\ConversationController;
@@ -46,6 +48,12 @@ Route::prefix('v1')->group(function (): void {
         Route::post('/presence/heartbeat', [PresenceController::class, 'heartbeat']);
         Route::post('/presence/offline', [PresenceController::class, 'offline']);
         Route::get('/discovery/online', [DiscoveryController::class, 'online']);
+        Route::get('/account/appeal', [AccountAppealController::class, 'show']);
+        Route::post('/account/appeal', [AccountAppealController::class, 'store'])
+            ->middleware('throttle:dilemin-sensitive');
+        Route::get('/moderation/appeals', [AppealReviewController::class, 'index']);
+        Route::post('/moderation/appeals/{appeal}/review', [AppealReviewController::class, 'review'])
+            ->whereNumber('appeal')->middleware('throttle:dilemin-sensitive');
         Route::patch('/account/notifications', [NotificationPreferenceController::class, 'update'])
             ->middleware('throttle:dilemin-sensitive');
         Route::post('/realtime/authorize', RealtimeAuthorizationController::class)

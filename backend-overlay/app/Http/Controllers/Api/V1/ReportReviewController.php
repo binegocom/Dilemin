@@ -56,6 +56,7 @@ class ReportReviewController extends Controller
                 $target = DB::table('users')->where('id', $targetId)
                     ->lockForUpdate()->first();
                 abort_unless($target, 422);
+                abort_if($target->suspended_at !== null, 409, 'Account already suspended.');
                 abort_if((bool) $target->is_moderator, 403,
                     'Staff accounts require separate administrative review.');
                 DB::table('users')->where('id', $targetId)->update([
@@ -126,6 +127,15 @@ class ReportReviewController extends Controller
                 'online_visible' => false,
                 'updated_at' => now(),
             ]);
+            DB::table('account_appeals')->where('user_id', $user->id)
+                ->where('suspended_at', $locked->suspended_at)
+                ->where('status', 'pending')->update([
+                    'status' => 'restored',
+                    'review_note' => $data['reason'],
+                    'reviewed_by' => $request->user()->id,
+                    'reviewed_at' => now(),
+                    'updated_at' => now(),
+                ]);
             DB::table('moderation_actions')->insert([
                 'moderator_id' => $request->user()->id,
                 'target_user_id' => $user->id,

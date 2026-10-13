@@ -62,6 +62,25 @@ final class DataExportController extends Controller
             }
             echo ']';
 
+            echo ',"account_appeals":[';
+            $first = true;
+            foreach (DB::table('account_appeals')->where('user_id', $userId)
+                ->orderBy('id')->cursor(['id', 'status', 'statement', 'review_note',
+                    'suspended_at', 'created_at', 'reviewed_at']) as $appeal) {
+                if (! $first) echo ',';
+                echo json_encode([
+                    'id' => (string) $appeal->id,
+                    'status' => $appeal->status,
+                    'statement' => $appeal->statement,
+                    'review_note' => $appeal->review_note,
+                    'suspended_at' => $appeal->suspended_at,
+                    'created_at' => $appeal->created_at,
+                    'reviewed_at' => $appeal->reviewed_at,
+                ], JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
+                $first = false;
+            }
+            echo ']';
+
             echo ',"messages":[';
             $first = true;
             foreach (DB::table('messages as m')

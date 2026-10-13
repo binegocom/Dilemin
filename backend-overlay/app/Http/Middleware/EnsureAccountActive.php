@@ -17,7 +17,9 @@ final class EnsureAccountActive
             // Suspended members retain their privacy rights and account exit.
             $allowExport = $request->isMethod('POST') && $request->is('api/v1/account/export');
             $allowDelete = $request->isMethod('DELETE') && $request->is('api/v1/account');
-            abort_unless($allowExport || $allowDelete, 403, 'Account suspended.');
+            $allowAppeal = ($request->isMethod('GET') || $request->isMethod('POST'))
+                && $request->is('api/v1/account/appeal');
+            abort_unless($allowExport || $allowDelete || $allowAppeal, 403, 'Account suspended.');
         }
 
         return $next($request);
