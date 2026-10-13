@@ -10,6 +10,7 @@ import '../chat/conversations_screen.dart';
 import '../directory/directory_screen.dart';
 import '../profiles/person_screen.dart';
 import '../radar/radar_screen.dart';
+import '../../ui/premium_navigation_bar.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({
@@ -149,14 +150,14 @@ class _HomeShellState extends State<HomeShell> {
           onSignOut: _signOut,
         ),
       ]),
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: PremiumNavigationBar(
         selectedIndex: _tab,
         onDestinationSelected: _selectTab,
-        destinations: [
-          NavigationDestination(icon: const Icon(Icons.radar), label: l10n.navRadar),
-          NavigationDestination(icon: const Icon(Icons.people_alt_outlined), label: l10n.navOnline),
-          NavigationDestination(icon: const Icon(Icons.chat_bubble_outline), label: l10n.navChats),
-          NavigationDestination(icon: const Icon(Icons.person_outline), label: l10n.navAccount),
+        labels: [
+          l10n.navRadar,
+          l10n.navOnline,
+          l10n.navChats,
+          l10n.navAccount,
         ],
       ),
     );
